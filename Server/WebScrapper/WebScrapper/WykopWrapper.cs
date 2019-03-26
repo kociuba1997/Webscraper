@@ -85,5 +85,37 @@ namespace WebScrapper
             return targetLink;
 
         }
+
+        public void getItterator()
+        {
+            int counter = 1;
+            //List<Record> lstRecords = new List<Record>();
+            foreach (HtmlNode li in doc.DocumentNode.SelectNodes("//*[@id=\"itemsStream\"]/li"))
+            {
+                HtmlNode userNode;
+                HtmlNode messageNode;
+                HtmlNode targetLinkNode;
+
+                try
+                {
+                    userNode = li.SelectSingleNode(".//div/div/div[1]/a[1]/b");
+                    Console.WriteLine("Uzytkownik: " + userNode.InnerText);
+
+                    messageNode = li.SelectSingleNode(".//div/div/div[2]/p");
+                    byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
+                    message = Encoding.UTF8.GetString(bytes);
+                    Console.WriteLine("Wpis: ");
+                    Console.WriteLine(message);
+                    Console.WriteLine("/////////////////////////////////////////////////////////////////////////////////////");
+
+
+                }
+                catch
+                {
+                    Console.WriteLine("Błąd");
+                }
+                counter++;
+            }
+        }
     }
 }
