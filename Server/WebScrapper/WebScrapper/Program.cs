@@ -19,25 +19,23 @@ namespace WebScrapper
                 TcpClient client = await server.AcceptTcpClientAsync();
                 byte[] buffer = new byte[1024];
                 await client.GetStream().ReadAsync(buffer, 0, buffer.Length).ContinueWith(
-                async (t) =>
+                (t) =>
                 {
                     int i = t.Result;
-                    while (true)
-                    {
-                        string bufforString = Encoding.Default.GetString(buffer).Substring(0, i);
-                        byte[] clientBuffor = new byte[1024];
-                        var values = GetWykopNews();
-                        clientBuffor = Encoding.ASCII.GetBytes(values);
-                        await client.GetStream().WriteAsync(clientBuffor, 0, clientBuffor.Length);
-                        i = await client.GetStream().ReadAsync(buffer, 0, buffer.Length);
-                    }
+                    string bufforString = Encoding.Default.GetString(buffer).Substring(0, i);
+                    byte[] clientBuffor = new byte[1024];
+                    string tag = Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace("\n", string.Empty).Replace("\0", string.Empty);
+                    var values = GetWykopNews(tag);
+                    clientBuffor = Encoding.ASCII.GetBytes(values);
+                    client.GetStream().Write(clientBuffor, 0, clientBuffor.Length);
+                    client.Close();
                 });
             }
         }
 
-        static string GetWykopNews()
+        static string GetWykopNews(string tag)
         {
-            WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/gorzow/wszystkie/?nsQ=%23gorzow");
+            WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/" + tag + "/wszystkie/");
             return wykopWrapper.getMessage();
         }
 
@@ -55,8 +53,8 @@ namespace WebScrapper
             //Console.WriteLine(wykopWrapper.getMessage());
             //Console.WriteLine(wykopWrapper.getTargetLink());
 
-            TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
-            twitterWrapper.getItterator();
+            //TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
+            //twitterWrapper.getItterator();
             //Console.WriteLine(twitterWrapper.getUser());
             //Console.WriteLine(twitterWrapper.getMessage());
             ////Console.WriteLine(twitterWrapper.getTargetLink());
