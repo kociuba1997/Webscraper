@@ -7,6 +7,10 @@ import com.example.newsscraper.R
 import com.example.newsscraper.service.Tcp
 import kotlinx.android.synthetic.main.activity_main.*
 
+fun String.remove(): String {
+    return this.replace("null", "")
+}
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupButton() {
         getDataTextView.setOnClickListener {
             entryTextView.text = "pobieranie danych..."
-            ConnectTask(tagEditText.text.toString()) { message -> entryTextView.text = message }.execute()
+            ConnectTask(tagEditText.text.toString()) { message -> entryTextView.text = message.remove() }.execute()
         }
     }
 }

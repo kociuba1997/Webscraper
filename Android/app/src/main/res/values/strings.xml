@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NewsScraper</string>
+    <string name="download">pobierz</string>
+    <string name="type_tag">podaj tag</string>
 </resources>

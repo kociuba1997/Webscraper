@@ -25,8 +25,8 @@ namespace WebScrapper
                     string bufforString = Encoding.Default.GetString(buffer).Substring(0, i);
                     byte[] clientBuffor = new byte[1024];
                     string tag = Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace("\n", string.Empty).Replace("\0", string.Empty);
-                    var values = GetWykopNews(tag);
-                    clientBuffor = Encoding.ASCII.GetBytes(values);
+                    var values = GetWykopNews(tag).Replace("\t", string.Empty);
+                    clientBuffor = Encoding.UTF8.GetBytes(values);
                     client.GetStream().Write(clientBuffor, 0, clientBuffor.Length);
                     client.Close();
                 });

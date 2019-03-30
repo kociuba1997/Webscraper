@@ -44,7 +44,8 @@ class Tcp(listener: OnMessageReceived) {
             val socket = Socket(serverAddress, SERVER_PORT)
             try {
                 bufferOut = PrintWriter(BufferedWriter(OutputStreamWriter(socket.getOutputStream())), true)
-                bufferIn = BufferedReader(InputStreamReader(socket.getInputStream()))
+
+                bufferIn = BufferedReader(InputStreamReader(socket.getInputStream(),"UTF-8"))
                 sendMessage(tag.toLowerCase())
                 while (isRunning) {
                     messageFromServer = bufferIn?.readLine()
