@@ -10,5 +10,6 @@ data class News(
     var text: String = "",
     var link: String = "",
     var image: String = "",
+    var date: String = "",
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 )

@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         navigationController = findNavController(R.id.navigationHostFragment)
         NavigationUI.setupActionBarWithNavController(this, navigationController)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
     }
 

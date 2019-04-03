@@ -18,7 +18,6 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(NewsListViewModel::class.java)
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(

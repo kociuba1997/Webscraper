@@ -34,10 +34,11 @@ class NewsListAdapter(private val items: List<News>, private val clickListener: 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(news: News, listener: OnItemClickListener) = with(itemView) {
-            textViewName.text = news.tag
-            textViewMet.text = news.text
-            buttonContact.text = news.author
-            buttonContact.setOnClickListener {
+            titleTextView.text = news.text
+            dateTextView.text = news.date
+            authorTextView.text = news.author
+            tagTextView.text = "tagi: ${news.tag}"
+            authorTextView.setOnClickListener {
                 val dialIntent = Intent(Intent.ACTION_DIAL)
                 dialIntent.data = Uri.parse("tel:${news.link}")
                 itemView.context.startActivity(dialIntent)
