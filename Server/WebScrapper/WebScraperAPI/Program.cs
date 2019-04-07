@@ -15,6 +15,12 @@ namespace WebScraperAPI
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
+            StartScraping();
+        }
+
+        public static void StartScraping()
+        {
+            // Action
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
