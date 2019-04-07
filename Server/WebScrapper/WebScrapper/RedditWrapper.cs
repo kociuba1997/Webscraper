@@ -100,14 +100,15 @@ namespace WebScrapper
                 try
                 {
                     userNode = li.SelectSingleNode(".//div[2]/div/div[2]/div[2]/div[2]/div/a");
-                    Console.WriteLine(userNode.InnerText);
+                    Console.WriteLine("Uzytkownik: " + userNode.InnerText);
                     Console.WriteLine();
                     messageNode = li.SelectSingleNode(".//div[2]/div/div[2]/div[1]/span/a/h2/span");
                     byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
                     message = Encoding.UTF8.GetString(bytes);
+                    Console.WriteLine("Wpis: ");
                     Console.WriteLine(message);
-                    Console.WriteLine();
-                    Console.WriteLine();
+                    Console.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    
 
 
                 }

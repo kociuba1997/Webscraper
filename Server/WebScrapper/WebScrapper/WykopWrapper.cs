@@ -112,7 +112,7 @@ namespace WebScrapper
                 }
                 catch
                 {
-                    Console.WriteLine("Błąd");
+                    Console.WriteLine("");
                 }
                 counter++;
             }

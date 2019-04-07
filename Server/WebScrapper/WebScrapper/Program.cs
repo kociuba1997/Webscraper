@@ -41,31 +41,46 @@ namespace WebScrapper
             return wykopWrapper.getMessage();
         }
 
+
         static void Main(string[] args)
         {
 
-            Task server = startServer(2048);
-            Console.WriteLine("Server started.");
-            Console.WriteLine("Wating for connection...");
-            Task.WaitAll(new Task[] { server });
+           //WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/politechnikapoznanska/wszystkie/?nsQ=%23politechnikapoznanska");
+           //wykopWrapper.getItterator();
+           
+           //TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
+           //twitterWrapper.getItterator();
 
-
-            //WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/gorzow/wszystkie/?nsQ=%23gorzow");
-            //Console.WriteLine(wykopWrapper.getUser());
-            //Console.WriteLine(wykopWrapper.getMessage());
-            //Console.WriteLine(wykopWrapper.getTargetLink());
-
-            TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
-            twitterWrapper.getItterator();
-            //Console.WriteLine(twitterWrapper.getUser());
-            //Console.WriteLine(twitterWrapper.getMessage());
-            ////Console.WriteLine(twitterWrapper.getTargetLink());
-
-            //RedditWrapper redditWrapper = new RedditWrapper("https://www.reddit.com/search?q=%23gorz%C3%B3w");
-            //Console.WriteLine(redditWrapper.getUser());
-            //Console.WriteLine(redditWrapper.getMessage());
-            //Console.WriteLine(redditWrapper.getTargetLink());
-            //Console.ReadLine();
+           RedditWrapper redditWrapper = new RedditWrapper("https://www.reddit.com/search?q=%23gorz%C3%B3w");
+           redditWrapper.getItterator();
+          
+           Console.ReadLine();
         }
     }
 }
+
+
+/////* Task server = startServer(2048);
+//// Console.WriteLine("Server started.");
+//// Console.WriteLine("Wating for connection...");
+//// Task.WaitAll(new Task[] { server });*/
+
+
+//// //WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/informatyka/wszystkie/?nsQ=%23informatyka");
+//// //wykopWrapper.getItterator();
+//// //Console.WriteLine(wykopWrapper.getUser());
+//// //Console.WriteLine(wykopWrapper.getMessage());
+//// //Console.WriteLine(wykopWrapper.getTargetLink());
+
+//// //TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
+//// //twitterWrapper.getItterator();
+//// //Console.WriteLine(twitterWrapper.getUser());
+//// //Console.WriteLine(twitterWrapper.getMessage());
+//// ////Console.WriteLine(twitterWrapper.getTargetLink());
+
+//// RedditWrapper redditWrapper = new RedditWrapper("https://www.reddit.com/search?q=%23gorz%C3%B3w");
+//// redditWrapper.getItterator();
+//// //Console.WriteLine(redditWrapper.getUser());
+//// //Console.WriteLine(redditWrapper.getMessage());
+//// //Console.WriteLine(redditWrapper.getTargetLink());
+//// Console.ReadLine();
