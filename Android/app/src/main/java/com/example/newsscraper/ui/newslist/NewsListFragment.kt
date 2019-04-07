@@ -41,11 +41,6 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener {
         newsRecyclerView.adapter = NewsListAdapter(newsList, this)
     }
 
-    override fun onItemClick(news: News, itemView: View) {
-//        val peopleBundle = Bundle().apply {
-//            putInt(getString(R.string.people_id), people.id)
-//        }
-//        view?.findNavController()?.navigate(R.id.action_peoplesListFragment_to_peopleDetailsFragment, peopleBundle)
-    }
+    override fun onItemClick(news: News, itemView: View) {}
 
 }
