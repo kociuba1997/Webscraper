@@ -1,4 +1,4 @@
-package com.example.newsscraper.ui.newslist
+package com.newsscraper.ui.newslist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.newsscraper.R
-import com.example.newsscraper.data.model.News
+import com.newsscraper.R
+import com.newsscraper.data.model.News
 import kotlinx.android.synthetic.main.fragment_news_list.*
 
 class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener {

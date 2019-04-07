@@ -1,4 +1,4 @@
-package com.example.newsscraper.ui.newslist
+package com.newsscraper.ui.newslist
 
 import android.content.Intent
 import android.net.Uri
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsscraper.R
-import com.example.newsscraper.data.model.News
+import com.newsscraper.R
+import com.newsscraper.data.model.News
 import kotlinx.android.synthetic.main.item_news_list.view.*
 
 class NewsListAdapter(private val items: List<News>, private val clickListener: OnItemClickListener) :

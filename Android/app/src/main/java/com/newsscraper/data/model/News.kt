@@ -1,4 +1,4 @@
-package com.example.newsscraper.data.model
+package com.newsscraper.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
