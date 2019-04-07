@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +24,11 @@ namespace WebScraperAPI.Controllers
             {
                 var db = ConnectToDataBase();
                 var collection = db.GetCollection<User>("Users");
+                var results = collection.Find(x => x.username == user.username).ToList();
+                if (results.Count > 0)
+                {
+                    return StatusCode(406);
+                }
                 collection.InsertOneAsync(user);
                 return StatusCode(201);
             }

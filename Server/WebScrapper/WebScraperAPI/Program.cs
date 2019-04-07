@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using WebScraperAPI.Scraper;
 
 namespace WebScraperAPI
 {
@@ -14,13 +15,9 @@ namespace WebScraperAPI
     {
         public static void Main(string[] args)
         {
+            var scraper = new WebScraper();
+            scraper.StartScraping();
             CreateWebHostBuilder(args).Build().Run();
-            StartScraping();
-        }
-
-        public static void StartScraping()
-        {
-            // Action
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
