@@ -9,10 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.newsscraper.R
 import com.newsscraper.data.model.News
+import com.newsscraper.services.ServiceManager
+import com.newsscraper.services.apireceivers.GetNewsReceiver
+import com.newsscraper.transportobjects.NewsDTO
 import kotlinx.android.synthetic.main.fragment_news_list.*
 
-class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener {
-
+class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNewsReceiver {
     private lateinit var viewModel: NewsListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,7 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener {
                 populateNewsList(news)
             }
         })
+        ServiceManager.getNews(this)
     }
 
     private fun populateNewsList(newsList: List<News>) {
@@ -42,5 +45,11 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(news: News, itemView: View) {}
+
+    override fun onGetNewsSuccess(news: List<NewsDTO>) {
+
+    }
+
+    override fun onGetNewsError() {}
 
 }
