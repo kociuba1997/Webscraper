@@ -10,16 +10,17 @@ namespace WebScrapper
 {
     class Wrapper
     {
-        protected string link;
-        protected string user;
-        protected string targetLink;
-        protected string message;
-        protected string page;
-        protected string photo;
+        public string link;
+        public string user;
+        public string targetLink;
+        public string message;
+        public string page;
+        public string photo = null;
 
         protected HtmlDocument htmlPageDoc = new HtmlDocument();
         protected HtmlNodeCollection pageNodes;
 
+        public Wrapper() { }
         public Wrapper(string link)
         {
             this.link = link;

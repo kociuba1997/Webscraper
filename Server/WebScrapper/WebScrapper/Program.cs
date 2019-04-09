@@ -51,6 +51,14 @@ namespace WebScrapper
            WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/politechnikapoznanska/wszystkie/?nsQ=%23politechnikapoznanska");
            wykopWrapper.getItterator();
 
+            foreach(var post in wykopWrapper.wrapperList)
+            {
+                Console.WriteLine(post.user);
+                Console.WriteLine(post.message);
+                Console.WriteLine(post.targetLink);
+                Console.WriteLine(post.photo);
+
+            }
            //TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
            //twitterWrapper.getItterator();
 

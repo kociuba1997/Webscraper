@@ -15,9 +15,12 @@ namespace WebScrapper
         public string htmlMessageNode = ".//div/div/div[2]/p";
         public string htmlUsereNode = ".//div/div/div[1]/a[1]/b";
         public string htmlPageNode;
-        public string htmlPhotoNode;
-        public string htmltargetLink = ".//div/div/div[1]/a[1]";
+        public string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
+        public string htmlUsertLink = ".//div/div/div[1]/a[1]";
+        public string htmlTargetLink = ".//div/div/div[1]/a[2]";
         public string htlmStarting = "//*[@id=\"itemsStream\"]/li[1]";
+
+        public List<Wrapper> wrapperList = new List<Wrapper>();
 
         public WykopWrapper(string link) : base(link) 
         {
@@ -25,36 +28,45 @@ namespace WebScrapper
 
         public void getItterator()
         {
-            int counter = 1;
-            //List<Record> lstRecords = new List<Record>();
+           
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes("//*[@id=\"itemsStream\"]/li"))
             {
+                Wrapper post = new Wrapper();
                 HtmlNode userNode;
                 HtmlNode messageNode;
                 HtmlNode TargetLink;
+                HtmlNode photoNode;
 
                 try
                 {
                     userNode = li.SelectSingleNode(htmlUsereNode);
-                    Console.WriteLine("Uzytkownik: " + encoder(userNode.InnerText));
+                    post.user = encoder(userNode.InnerText);
 
                     messageNode = li.SelectSingleNode(htmlMessageNode);
-                    
-                    Console.WriteLine("Wpis: ");
-                    Console.WriteLine(encoder(messageNode.InnerText));
+                    post.message = encoder(messageNode.InnerText);
+                   
+                    TargetLink = li.SelectSingleNode(htmlTargetLink);
+                    HtmlAttribute att = TargetLink.Attributes["href"];
+                    post.targetLink = encoder(att.Value);
 
-                    TargetLink = li.SelectSingleNode(htmltargetLink);
-
-                    Console.WriteLine(encoder(TargetLink.InnerText));
-                    Console.WriteLine("/////////////////////////////////////////////////////////////////////////////////////");
-
+                    try
+                    {
+                        photoNode = li.SelectSingleNode(htmlPhotoNode);
+                        HtmlAttribute pho = photoNode.Attributes["href"];
+                        post.photo = pho.Value;
+                    }
+                    catch
+                    {
+                        post.photo = null;
+                    }
+                    wrapperList.Add(post);
 
                 }
                 catch
                 {
-                    Console.WriteLine("");
+                   
                 }
-                counter++;
+                
             }
         }
     }
