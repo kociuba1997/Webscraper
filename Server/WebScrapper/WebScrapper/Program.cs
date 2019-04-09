@@ -38,21 +38,24 @@ namespace WebScrapper
         static string GetWykopNews()
         {
             WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/gorzow/wszystkie/?nsQ=%23gorzow");
-            return wykopWrapper.getMessage();
+            return wykopWrapper.getMessage(wykopWrapper.htmlMessageNode);
         }
 
 
         static void Main(string[] args)
         {
 
-           //WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/politechnikapoznanska/wszystkie/?nsQ=%23politechnikapoznanska");
-           //wykopWrapper.getItterator();
-           
+            //Wrapper wr = new Wrapper("https://www.wykop.pl/tag/politechnikapoznanska/wszystkie/?nsQ=%23politechnikapoznanska");
+            //Console.WriteLine(wr.getUser("//*[@id=\"itemsStream\"]/li[1]/div/div/div[1]/a[1]/b"));
+
+           WykopWrapper wykopWrapper = new WykopWrapper("https://www.wykop.pl/tag/politechnikapoznanska/wszystkie/?nsQ=%23politechnikapoznanska");
+           wykopWrapper.getItterator();
+
            //TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
            //twitterWrapper.getItterator();
 
-           RedditWrapper redditWrapper = new RedditWrapper("https://www.reddit.com/search?q=%23gorz%C3%B3w");
-           redditWrapper.getItterator();
+           //RedditWrapper redditWrapper = new RedditWrapper("https://www.reddit.com/search?q=%23gorz%C3%B3w");
+           //redditWrapper.getItterator();
           
            Console.ReadLine();
         }

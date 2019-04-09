@@ -8,104 +8,44 @@ using System.Threading.Tasks;
 
 namespace WebScrapper
 {
-    class WykopWrapper
+    class WykopWrapper : Wrapper
     {
-        string link;
-        string user;
-        string targetLink;
-        string message;
-        string page;
+  
 
-        HtmlDocument doc = new HtmlDocument();
-        HtmlNodeCollection nodes;
+        public string htmlMessageNode = ".//div/div/div[2]/p";
+        public string htmlUsereNode = ".//div/div/div[1]/a[1]/b";
+        public string htmlPageNode;
+        public string htmlPhotoNode;
+        public string htmltargetLink = ".//div/div/div[1]/a[1]";
+        public string htlmStarting = "//*[@id=\"itemsStream\"]/li[1]";
 
-        public WykopWrapper(string link)
+        public WykopWrapper(string link) : base(link) 
         {
-            this.link = link;
-
-            using (var webClient = new WebClient())
-            {
-                page = webClient.DownloadString(link);
-
-                doc.LoadHtml(page);
-            }
-
-        }
-
-        public string getUser()
-        {
-            HtmlNode userNode;
-
-            try
-            {
-                userNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"itemsStream\"]/li[1]/div/div/div[1]/a[1]/b");
-                byte[] bytes = Encoding.Default.GetBytes(userNode.InnerText);
-                user = Encoding.UTF8.GetString(bytes);
-            }
-            catch (Exception ex)
-            {
-                return "Błąd";
-            }
-            return user;
-
-        }
-
-        public string getMessage()
-        {
-            HtmlNode messageNode;
-
-            try
-            {
-                messageNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"itemsStream\"]/li[1]/div/div/div[2]/p");
-                byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
-                message = Encoding.UTF8.GetString(bytes);
-            }
-            catch (Exception ex)
-            {
-                return "Błąd";
-            }
-            return message;
-
-        }
-
-        public string getTargetLink()
-        {
-            HtmlNode targetLinkNode;
-
-            try
-            {
-                // problem z zastępowaniem targetLinku tytułem wiadomosci
-                targetLinkNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"itemsStream\"]/li[1]/div/div/div[2]/a");
-                targetLink = targetLinkNode.InnerText;
-            }
-            catch (Exception ex)
-            {
-                return "Błąd";
-            }
-            return targetLink;
-
         }
 
         public void getItterator()
         {
             int counter = 1;
             //List<Record> lstRecords = new List<Record>();
-            foreach (HtmlNode li in doc.DocumentNode.SelectNodes("//*[@id=\"itemsStream\"]/li"))
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes("//*[@id=\"itemsStream\"]/li"))
             {
                 HtmlNode userNode;
                 HtmlNode messageNode;
-                HtmlNode targetLinkNode;
+                HtmlNode TargetLink;
 
                 try
                 {
-                    userNode = li.SelectSingleNode(".//div/div/div[1]/a[1]/b");
-                    Console.WriteLine("Uzytkownik: " + userNode.InnerText);
+                    userNode = li.SelectSingleNode(htmlUsereNode);
+                    Console.WriteLine("Uzytkownik: " + encoder(userNode.InnerText));
 
-                    messageNode = li.SelectSingleNode(".//div/div/div[2]/p");
-                    byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
-                    message = Encoding.UTF8.GetString(bytes);
+                    messageNode = li.SelectSingleNode(htmlMessageNode);
+                    
                     Console.WriteLine("Wpis: ");
-                    Console.WriteLine(message);
+                    Console.WriteLine(encoder(messageNode.InnerText));
+
+                    TargetLink = li.SelectSingleNode(htmltargetLink);
+
+                    Console.WriteLine(encoder(TargetLink.InnerText));
                     Console.WriteLine("/////////////////////////////////////////////////////////////////////////////////////");
 
 
