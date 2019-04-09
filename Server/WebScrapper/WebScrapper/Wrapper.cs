@@ -15,7 +15,7 @@ namespace WebScrapper
         public string targetLink;
         public string message;
         public string page;
-        public string photo = null;
+        public string photo;
 
         protected HtmlDocument htmlPageDoc = new HtmlDocument();
         protected HtmlNodeCollection pageNodes;

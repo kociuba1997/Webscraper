@@ -12,13 +12,12 @@ namespace WebScrapper
     {
   
 
-        public string htmlMessageNode = ".//div/div/div[2]/p";
-        public string htmlUsereNode = ".//div/div/div[1]/a[1]/b";
-        public string htmlPageNode;
-        public string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
-        public string htmlUsertLink = ".//div/div/div[1]/a[1]";
-        public string htmlTargetLink = ".//div/div/div[1]/a[2]";
-        public string htlmStarting = "//*[@id=\"itemsStream\"]/li[1]";
+        private string htmlMessageNode = ".//div/div/div[2]/p";
+        private string htmlUsereNode = ".//div/div/div[1]/a[1]/b";
+        private string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
+        private string htmlUsertLink = ".//div/div/div[1]/a[1]";
+        private string htmlTargetLink = ".//div/div/div[1]/a[2]";
+        private string htlmStarting = "//*[@id=\"itemsStream\"]/li";
 
         public List<Wrapper> wrapperList = new List<Wrapper>();
 
@@ -26,39 +25,89 @@ namespace WebScrapper
         {
         }
 
+
+        public string getUser(HtmlNode userNode)
+        {
+            try
+            {
+                userNode = userNode.SelectSingleNode(htmlUsereNode);
+                user = encoder(userNode.InnerText);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        public string getMessage(HtmlNode messageNode)
+        {
+            try
+            {
+                messageNode = messageNode.SelectSingleNode(htmlMessageNode);
+                message = encoder(messageNode.InnerText);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return message;
+
+        }
+
+        public string getTargetLink(HtmlNode targetLinkNode)
+        {
+            try
+            {
+                // problem z zastępowaniem targetLinku tytułem wiadomosci
+                targetLinkNode = targetLinkNode.SelectSingleNode(htmlTargetLink);
+                HtmlAttribute attribute = targetLinkNode.Attributes["href"];
+                targetLink = attribute.Value;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return targetLink;
+
+        }
+
+        public string getPhoto(HtmlNode photoNode)
+        {
+            try
+            {
+                // problem z zastępowaniem targetLinku tytułem wiadomosci
+                photoNode = photoNode.SelectSingleNode(htmlPhotoNode);
+                HtmlAttribute attribute = photoNode.Attributes["href"];
+                photo = attribute.Value;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return photo;
+
+        }
+
+
         public void getItterator()
         {
            
-            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes("//*[@id=\"itemsStream\"]/li"))
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStarting))
             {
                 Wrapper post = new Wrapper();
-                HtmlNode userNode;
-                HtmlNode messageNode;
-                HtmlNode TargetLink;
-                HtmlNode photoNode;
 
                 try
                 {
-                    userNode = li.SelectSingleNode(htmlUsereNode);
-                    post.user = encoder(userNode.InnerText);
+                    post.user = getUser(li);
 
-                    messageNode = li.SelectSingleNode(htmlMessageNode);
-                    post.message = encoder(messageNode.InnerText);
-                   
-                    TargetLink = li.SelectSingleNode(htmlTargetLink);
-                    HtmlAttribute att = TargetLink.Attributes["href"];
-                    post.targetLink = encoder(att.Value);
+                    post.message = getMessage(li);
 
-                    try
-                    {
-                        photoNode = li.SelectSingleNode(htmlPhotoNode);
-                        HtmlAttribute pho = photoNode.Attributes["href"];
-                        post.photo = pho.Value;
-                    }
-                    catch
-                    {
-                        post.photo = null;
-                    }
+                    post.targetLink = getTargetLink(li);
+
+                    post.photo = getPhoto(li);
+
                     wrapperList.Add(post);
 
                 }
