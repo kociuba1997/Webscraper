@@ -4,119 +4,123 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WebScrapper
 {
-    class RedditWrapper
+    class RedditWrapper : Wrapper
     {
 
-        string link;
-        string user;
-        string targetLink;
-        string message;
-        string page;
+        private string htmlMessageNode = ".//div[2]/div/div[2]/div[1]/span/a/h2/span";
+        private string htmlUsereNode = ".//div[2]/div/div[2]/div[2]/div[2]/div/a";
+        private string htmlPhotoNode = ".//div[2]/div/div[1]/div/div/a/div";
+        private string htmlUsertLink = ".//div/div/div[1]/a[1]";
+        private string htmlTargetLink = ".//div[2]/div/div[2]/div[1]/span/a";
+        private string htlmStarting = "//*[@id=\"SHORTCUT_FOCUSABLE_DIV\"]/div[2]/div/div/div/div[2]/div[3]/div[1]/div[3]/div";
 
-        HtmlDocument doc = new HtmlDocument();
-        HtmlNodeCollection nodes;
+        public List<Wrapper> wrapperList = new List<Wrapper>();
 
-        public RedditWrapper(string link)
+        public RedditWrapper(string link) : base(link)
         {
-            this.link = link;
-
-            using (var webClient = new WebClient())
-            {
-                page = webClient.DownloadString(link);
-
-                doc.LoadHtml(page);
-            }
-
         }
 
-        public string getUser()
-        {
-            HtmlNode userNode;
 
+        public string getUser(HtmlNode userNode)
+        {
             try
             {
-                userNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"t3_ar8ef9\"]/div[2]/div/div[2]/div[2]/div[2]/div/a");
-                byte[] bytes = Encoding.Default.GetBytes(userNode.InnerText);
-                user = Encoding.UTF8.GetString(bytes);
+                userNode = userNode.SelectSingleNode(htmlUsereNode);
+                user = encoder(userNode.InnerText);
             }
             catch (Exception ex)
             {
-                return "Błąd";
+                return null;
             }
+
             return user;
-
         }
 
-        public string getMessage()
+        public string getMessage(HtmlNode messageNode)
         {
-            HtmlNode messageNode;
-
             try
             {
-                messageNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"t3_ar8ef9\"]/div[2]/div/div[2]/div[1]/span/a/h2/span");
-                byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
-                message = Encoding.UTF8.GetString(bytes);
+                messageNode = messageNode.SelectSingleNode(htmlMessageNode);
+                message = encoder(messageNode.InnerText);
             }
             catch (Exception ex)
             {
-                return "Błąd";
+                return null;
             }
             return message;
 
         }
 
-        public string getTargetLink()
+        public string getTargetLink(HtmlNode targetLinkNode)
         {
-            HtmlNode targetLinkNode;
-
             try
             {
-                // problem z zastępowaniem targetLinku nickiem lub godziną
-                targetLinkNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"t3_ar8ef9\"]/div[2]/div/div[2]/div[1]/span/a");
-                targetLink = targetLinkNode.InnerText;
+                targetLinkNode = targetLinkNode.SelectSingleNode(htmlTargetLink);
+                HtmlAttribute attribute = targetLinkNode.Attributes["href"];
+                targetLink = "https://www.reddit.com";
+                targetLink += attribute.Value;
             }
             catch (Exception ex)
             {
-                return "Błąd";
+                return null;
             }
             return targetLink;
 
         }
 
+        public string getPhoto(HtmlNode photoNode)
+        {
+            try
+            {
+                string extractionLink;
+                photoNode = photoNode.SelectSingleNode(htmlPhotoNode);
+                HtmlAttribute attribute = photoNode.Attributes["style"];
+                extractionLink = attribute.Value;
+
+                Regex rx = new Regex(@"\((.*?)\)");
+                MatchCollection matches = rx.Matches(extractionLink);
+
+                photo = matches[0].Groups[0].Value.TrimStart('(').TrimEnd(')');
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return photo;
+
+        }
+
+
         public void getItterator()
         {
-            int counter = 1;
-            //List<Record> lstRecords = new List<Record>();
-            foreach (HtmlNode li in doc.DocumentNode.SelectNodes("//*[@id=\"SHORTCUT_FOCUSABLE_DIV\"]/div[2]/div/div/div/div[2]/div[3]/div[1]/div[3]/div"))
+
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStarting))
             {
-                HtmlNode userNode;
-                HtmlNode messageNode;
-                HtmlNode targetLinkNode;
+                Wrapper post = new Wrapper();
 
                 try
                 {
-                    userNode = li.SelectSingleNode(".//div[2]/div/div[2]/div[2]/div[2]/div/a");
-                    Console.WriteLine("Uzytkownik: " + userNode.InnerText);
-                    Console.WriteLine();
-                    messageNode = li.SelectSingleNode(".//div[2]/div/div[2]/div[1]/span/a/h2/span");
-                    byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
-                    message = Encoding.UTF8.GetString(bytes);
-                    Console.WriteLine("Wpis: ");
-                    Console.WriteLine(message);
-                    Console.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                    
+                    post.user = getUser(li);
 
+                    post.message = getMessage(li);
+
+                    post.targetLink = getTargetLink(li);
+
+                    post.photo = getPhoto(li);
+
+                    wrapperList.Add(post);
 
                 }
                 catch
                 {
-                    Console.WriteLine("Błąd");
+
                 }
-                counter++;
+
             }
         }
     }
