@@ -13,5 +13,6 @@ interface UserApi {
     fun registerUser(@Body user: UserDTO)
 
     @GET("user/news")
-    fun getNews(): Observable<NewsDTO>
+    fun getNews(): Observable<List<NewsDTO>>
+
 }

@@ -8,13 +8,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.newsscraper.R
 import com.newsscraper.data.model.News
+import com.newsscraper.transportobjects.NewsDTO
 import kotlinx.android.synthetic.main.item_news_list.view.*
 
-class NewsListAdapter(private val items: List<News>, private val clickListener: OnItemClickListener) :
+class NewsListAdapter(private val items: List<NewsDTO>, private val clickListener: OnItemClickListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(news: News, itemView: View)
+        fun onItemClick(news: NewsDTO, itemView: View)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -33,11 +34,12 @@ class NewsListAdapter(private val items: List<News>, private val clickListener: 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(news: News, listener: OnItemClickListener) = with(itemView) {
-            titleTextView.text = news.text
-            dateTextView.text = news.date
+        fun bind(news: NewsDTO, listener: OnItemClickListener) = with(itemView) {
+            titleTextView.text = news.text.trim()
+            dateTextView.text = "11.04.2019 15:24"
+            val sb = StringBuilder("tagi: ")
             authorTextView.text = news.author
-            tagTextView.text = "tagi: ${news.tag}"
+            tagTextView.text = news.tags.joinTo(sb, ", ")
             authorTextView.setOnClickListener {
                 val dialIntent = Intent(Intent.ACTION_DIAL)
                 dialIntent.data = Uri.parse("tel:${news.link}")
@@ -49,5 +51,4 @@ class NewsListAdapter(private val items: List<News>, private val clickListener: 
         }
 
     }
-
 }

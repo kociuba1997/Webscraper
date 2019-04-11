@@ -21,7 +21,7 @@ object ServiceManager {
             Action1 { e -> receiver.onGetNewsError() })
     }
 
-    fun setupRequest(
+    private fun setupRequest(
         observable: Observable<*>,
         onNext: Action1<Any>,
         onError: Action1<Throwable>,
@@ -44,9 +44,9 @@ object ServiceManager {
         return Func1 { observable ->
             observable
                 .zipWith(Observable.range(1, 3)) { error, _ -> error }
-                .flatMap(Func1<Any, Observable<*>> { error ->
+                .flatMap { error ->
                     Observable.error<Any>(error as Throwable)
-                })
+                }
         }
     }
 }

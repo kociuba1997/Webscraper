@@ -3,7 +3,6 @@ package com.newsscraper.services
 import com.google.gson.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.Duration
@@ -16,12 +15,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import timber.log.Timber
 import java.io.IOException
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.*
+import javax.security.cert.CertificateException
+
 
 object ServiceFactory {
 
     private var httpClient: OkHttpClient? = null
-    private var cacheHttpClient: OkHttpClient? = null
     private var noAuthHttpClient: OkHttpClient? = null
 
     private val gson: Gson
@@ -63,7 +65,6 @@ object ServiceFactory {
     internal fun <T> createRetrofitService(
         clazz: Class<T>,
         endPoint: String?,
-        isRefreshToken: Boolean = false,
         authorizationHeader: Boolean = true
     ): T {
         if (endPoint == null) {
@@ -71,7 +72,7 @@ object ServiceFactory {
         }
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = if (authorizationHeader) createHttpClient(isRefreshToken) else createNoAuthHttpClient()
+        val client = if (authorizationHeader) createHttpClient() else createNoAuthHttpClient()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(endPoint)
@@ -84,12 +85,41 @@ object ServiceFactory {
         return retrofit.create(clazz)
     }
 
-    private fun createHttpClient(isRefreshToken: Boolean): OkHttpClient {
+    private fun createHttpClient(): OkHttpClient {
+        val sslContext = SSLContext.getInstance("SSL")
+        val trustAllCerts = getTrustManager()
+        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
         return httpClient ?: OkHttpClient.Builder()
-            .addNetworkInterceptor(AddHeaderInterceptor(isRefreshToken))
+            .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+            .addInterceptor(AddHeaderInterceptor())
+            .hostnameVerifier(getHostnameVerifier())
             .addInterceptor(createHttpLoggingInterceptor())
             .setTimeouts()
             .build()
+    }
+
+    private fun getHostnameVerifier(): HostnameVerifier {
+        return object : HostnameVerifier {
+            override fun verify(hostname: String?, session: SSLSession?): Boolean {
+                return true
+            }
+        }
+    }
+
+    private fun getTrustManager(): Array<TrustManager> {
+        return arrayOf(object : X509TrustManager {
+            @Throws(CertificateException::class)
+            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+            }
+
+            @Throws(CertificateException::class)
+            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return arrayOf()
+            }
+        })
     }
 
     private fun createNoAuthHttpClient(): OkHttpClient {
@@ -112,19 +142,14 @@ object ServiceFactory {
         return interceptor
     }
 
-    class AddHeaderInterceptor(private var isRefreshToken: Boolean) : Interceptor {
+    class AddHeaderInterceptor : Interceptor {
 
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
             val builder = chain.request().newBuilder()
-            addAuthorizationHeader(builder, isRefreshToken)
+            builder.addHeader("Authorization", ServiceProvider.AUTHORIZATION_HEADER)
             return chain.proceed(builder.build())
         }
     }
-
-    private fun addAuthorizationHeader(builder: Request.Builder, isRefreshToken: Boolean) {
-        builder.addHeader("Authorization", ServiceProvider.AUTHORIZATION_HEADER)
-    }
-
 
 }
