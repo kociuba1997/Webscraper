@@ -3,6 +3,6 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/navigation_graph" app:startDestination="@id/newsListFragment">
 
-    <fragment android:id="@+id/newsListFragment" android:name="com.example.newsscraper.ui.newslist.NewsListFragment"
+    <fragment android:id="@+id/newsListFragment" android:name="com.newsscraper.ui.newslist.NewsListFragment"
               android:label="NewsListFragment"/>
 </navigation>

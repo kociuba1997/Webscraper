@@ -1,11 +1,11 @@
-package com.example.newsscraper.data.db
+package com.newsscraper.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.newsscraper.data.model.News
+import com.newsscraper.data.model.News
 
 @Dao
 interface NewsDao {

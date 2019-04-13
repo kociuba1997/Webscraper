@@ -1,11 +1,11 @@
-package com.example.newsscraper.ui
+package com.newsscraper.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.example.newsscraper.R
+import com.newsscraper.R
 
 class MainActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package com.example.newsscraper.data.db
+package com.newsscraper.data.db
 
 import android.app.Application
 import android.os.AsyncTask
@@ -6,8 +6,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.newsscraper.data.model.News
-import com.example.newsscraper.data.net.NewsInfoProvider
+import com.newsscraper.data.model.News
+import com.newsscraper.data.net.NewsInfoProvider
 
 @Database(entities = [News::class], version = 1)
 abstract class NewsDatabase : RoomDatabase() {

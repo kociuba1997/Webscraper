@@ -1,7 +1,7 @@
-package com.example.newsscraper
+package com.newsscraper
 
 import android.app.Application
-import com.example.newsscraper.data.NewsRepository
+import com.newsscraper.data.NewsRepository
 
 class NewsScraperApp : Application() {
 
