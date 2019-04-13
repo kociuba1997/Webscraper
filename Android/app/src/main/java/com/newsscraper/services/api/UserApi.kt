@@ -10,7 +10,7 @@ import rx.Observable
 interface UserApi {
 
     @POST("user")
-    fun registerUser(@Body user: UserDTO)
+    fun registerUser(@Body user: UserDTO): Observable<Void>
 
     @GET("user/news")
     fun getNews(): Observable<List<NewsDTO>>
