@@ -14,6 +14,7 @@ import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.ServiceProvider
 import com.newsscraper.services.apireceivers.GetNewsReceiver
 import com.newsscraper.transportobjects.NewsDTO
+import com.newsscraper.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_news_list.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,13 +39,19 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNew
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 //        viewModel.getNewsList().observe(this, Observer<List<News>> { news ->
 //            news?.let {
 //                populateNewsList(news)
 //            }
 //        })
         ServiceManager.getNews(this)
+        sendToAnalyticsButton.setOnClickListener {
+            if(tagEditText.text.isNotEmpty()) {
+                (activity as MainActivity).sendToAnalytics(
+                    tagEditText.text.toString(),
+                    Bundle().apply { putInt("TAG", tagEditText.id)})
+            }
+        }
     }
 
     private fun populateNewsList(newsList: List<NewsDTO>) {
