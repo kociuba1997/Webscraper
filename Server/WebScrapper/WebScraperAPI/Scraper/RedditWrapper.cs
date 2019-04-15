@@ -4,43 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WebScraperAPI.Model;
 
 namespace WebScraperAPI.Scraper
 {
-    class WykopWrapper : Wrapper
+    class RedditWrapper : Wrapper
     {
-  
 
-        private string htmlMessageNode = ".//div/div/div[2]/p";
-        private string htmlUsereNode = ".//div/div/div[1]/a[1]/b";
-        private string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
+        private string htmlMessageNode = ".//div[2]/div/div[2]/div[1]/span/a/h2/span";
+        private string htmlUsereNode = ".//div[2]/div/div[2]/div[2]/div[2]/div/a";
+        private string htmlPhotoNode = ".//div[2]/div/div[1]/div/div/a/div";
         private string htmlUsertLink = ".//div/div/div[1]/a[1]";
-        private string htmlTargetLink = ".//div/div/div[1]/a[2]";
-        private string htlmStarting = "//*[@id=\"itemsStream\"]/li";
+        private string htmlTargetLink = ".//div[2]/div/div[2]/div[1]/span/a";
+        private string htlmStarting = "//*[@id=\"SHORTCUT_FOCUSABLE_DIV\"]/div[2]/div/div/div/div[2]/div[3]/div[1]/div[3]/div";
 
         public List<Wrapper> wrapperList = new List<Wrapper>();
 
-        public WykopWrapper(string link) : base(link) 
+        public RedditWrapper(string link) : base(link)
         {
         }
 
-       public List<News> getNewsList()
-        {
-            getItterator();
-
-            foreach (var wrapp in wrapperList)
-            {
-                string[] list = { "gorzów" };
-
-                News news =new News(list, wrapp.user,  wrapp.message, wrapp.targetLink, wrapp.photo);
-
-                newsList.Add(news);
-            }
-
-            return newsList;
-        }
 
         public string getUser(HtmlNode userNode)
         {
@@ -76,10 +60,10 @@ namespace WebScraperAPI.Scraper
         {
             try
             {
-                // problem z zastępowaniem targetLinku tytułem wiadomosci
                 targetLinkNode = targetLinkNode.SelectSingleNode(htmlTargetLink);
                 HtmlAttribute attribute = targetLinkNode.Attributes["href"];
-                targetLink = attribute.Value;
+                targetLink = "https://www.reddit.com";
+                targetLink += attribute.Value;
             }
             catch (Exception ex)
             {
@@ -93,10 +77,15 @@ namespace WebScraperAPI.Scraper
         {
             try
             {
-                // problem z zastępowaniem targetLinku tytułem wiadomosci
+                string extractionLink;
                 photoNode = photoNode.SelectSingleNode(htmlPhotoNode);
-                HtmlAttribute attribute = photoNode.Attributes["href"];
-                photo = attribute.Value;
+                HtmlAttribute attribute = photoNode.Attributes["style"];
+                extractionLink = attribute.Value;
+
+                Regex rx = new Regex(@"\((.*?)\)");
+                MatchCollection matches = rx.Matches(extractionLink);
+
+                photo = matches[0].Groups[0].Value.TrimStart('(').TrimEnd(')');
             }
             catch (Exception ex)
             {
@@ -109,7 +98,7 @@ namespace WebScraperAPI.Scraper
 
         public void getItterator()
         {
-           
+
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStarting))
             {
                 Wrapper post = new Wrapper();
@@ -129,9 +118,9 @@ namespace WebScraperAPI.Scraper
                 }
                 catch
                 {
-                   
+
                 }
-                
+
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using WebScraperAPI.Controllers;
 using WebScraperAPI.Model;
+using WebScraperAPI.Scraper;
 
 namespace WebScraperAPI.Scraper
 {
@@ -29,9 +30,8 @@ namespace WebScraperAPI.Scraper
             // download news
             // clear database
             // add news to database
-
             WykopWrapper ww = new WykopWrapper("https://www.wykop.pl/tag/gniezno/");
-            var news = ww.getItterator();
+            var news = ww.getNewsList();
             try
             {
                 var db = UserController.ConnectToDataBase();
@@ -40,7 +40,7 @@ namespace WebScraperAPI.Scraper
                 var newsCollection = db.GetCollection<News>("News");
                 newsCollection.InsertManyAsync(news);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Failed");
             }
