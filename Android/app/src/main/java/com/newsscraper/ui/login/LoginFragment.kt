@@ -31,6 +31,8 @@ class LoginFragment : Fragment(), LoginReceiver {
         registerTextView.setOnClickListener {
             view.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
+        usernameEditText.setText("hamulec")
+        passwordEditText.setText("hamulec")
     }
 
     override fun onLoginSuccess(token: String) {

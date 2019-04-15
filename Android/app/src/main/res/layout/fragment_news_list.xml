@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.androidx.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.androidx.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
 
-    <EditText
-            android:id="@+id/tagEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:hint="tag"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/newsRecyclerView"
-            app:layout_constraintEnd_toStartOf="@id/sendToAnalyticsButton"/>
+  <EditText
+    android:id="@+id/tagEditText"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:hint="tag"
+    app:layout_constraintBottom_toTopOf="@+id/newsRecyclerView"
+    app:layout_constraintEnd_toStartOf="@id/sendToAnalyticsButton"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-            android:id="@+id/sendToAnalyticsButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="wyślij do analytics"
-            android:layout_margin="16dp"
-            app:layout_constraintStart_toEndOf="@id/tagEditText"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/newsRecyclerView"/>
+  <Button
+    android:id="@+id/sendToAnalyticsButton"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:text="wyślij do analytics"
+    app:layout_constraintBottom_toTopOf="@id/newsRecyclerView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/tagEditText"
+    app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/newsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sendToAnalyticsButton"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_news_list"/>
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/newsRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/sendToAnalyticsButton"
+    tools:listitem="@layout/item_news_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
