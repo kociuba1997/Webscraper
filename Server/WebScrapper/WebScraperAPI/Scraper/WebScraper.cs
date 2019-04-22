@@ -44,14 +44,16 @@ namespace WebScraperAPI.Scraper
             // download news
             // clear database
             // add news to database
-            List<News> newsList = new List<News>();
             try
             {
                 var db = UserController.ConnectToDataBase();
+                db.DropCollection("News");
+                db.CreateCollection("News");
+                var newsCollection = db.GetCollection<News>("News");
 
                 var allTags = FetchAllTags(db);
-
-                foreach(var tag in allTags)
+                List<News> newsList = new List<News>();
+                foreach (var tag in allTags)
                 {
                     WykopWrapper ww = new WykopWrapper("https://www.wykop.pl/tag/" + tag + "/");
                     var tagNews = ww.getNewsList(tag);
@@ -60,12 +62,9 @@ namespace WebScraperAPI.Scraper
                     // add redit
                 }
 
-                db.DropCollection("News");
-                db.CreateCollection("News");
-                var newsCollection = db.GetCollection<News>("News");
                 newsCollection.InsertManyAsync(newsList);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 System.Diagnostics.Debug.WriteLine("Failed");
             }
