@@ -26,15 +26,15 @@ namespace WebScraperAPI.Scraper
         {
         }
 
-       public List<News> getNewsList()
+       public List<News> getNewsList(string tag)
         {
             getItterator();
 
             foreach (var wrapp in wrapperList)
             {
-                string[] list = { "gorzów" };
+                string[] list = { tag };
 
-                News news =new News(list, wrapp.user,  wrapp.message, wrapp.targetLink, wrapp.photo);
+                News news = new News(list, wrapp.user,  wrapp.message, wrapp.targetLink, wrapp.photo);
 
                 newsList.Add(news);
             }
