@@ -55,7 +55,6 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNew
     override fun onItemClick(news: NewsDTO, itemView: View) {}
 
     override fun onGetNewsSuccess(news: List<NewsDTO>) {
-        news[0]
         populateNewsList(news)
     }
 

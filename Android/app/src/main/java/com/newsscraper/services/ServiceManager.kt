@@ -1,7 +1,10 @@
 package com.newsscraper.services
 
 import com.newsscraper.services.apireceivers.GetNewsReceiver
+import com.newsscraper.services.apireceivers.LoginReceiver
+import com.newsscraper.services.apireceivers.RegisterReceiver
 import com.newsscraper.transportobjects.NewsDTO
+import com.newsscraper.transportobjects.UserDTO
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -19,6 +22,22 @@ object ServiceManager {
             .getNews(),
             Action1 { receiver.onGetNewsSuccess(it as List<NewsDTO>) },
             Action1 { e -> receiver.onGetNewsError() })
+    }
+
+    fun register(receiver: RegisterReceiver, user: UserDTO) {
+        setupRequest(ServiceProvider
+            .userRegisterService
+            .registerUser(user),
+            Action1 { receiver.onRegisterSuccess() },
+            Action1 { e -> receiver.onRegisterError() })
+    }
+
+    fun login(receiver: LoginReceiver, user: UserDTO) {
+        setupRequest(ServiceProvider
+            .loginService
+            .login(user),
+            Action1 { receiver.onLoginSuccess(it as String) },
+            Action1 { e -> receiver.onLoginError() })
     }
 
     private fun setupRequest(

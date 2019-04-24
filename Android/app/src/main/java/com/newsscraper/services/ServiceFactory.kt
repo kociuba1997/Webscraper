@@ -85,6 +85,18 @@ object ServiceFactory {
         return retrofit.create(clazz)
     }
 
+    private fun createNoAuthHttpClient(): OkHttpClient {
+        val sslContext = SSLContext.getInstance("SSL")
+        val trustAllCerts = getTrustManager()
+        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+        return noAuthHttpClient ?: OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+            .hostnameVerifier(getHostnameVerifier())
+            .addInterceptor(createHttpLoggingInterceptor())
+            .setTimeouts()
+            .build()
+    }
+
     private fun createHttpClient(): OkHttpClient {
         val sslContext = SSLContext.getInstance("SSL")
         val trustAllCerts = getTrustManager()
@@ -120,13 +132,6 @@ object ServiceFactory {
                 return arrayOf()
             }
         })
-    }
-
-    private fun createNoAuthHttpClient(): OkHttpClient {
-        return noAuthHttpClient ?: OkHttpClient.Builder()
-            .addInterceptor(createHttpLoggingInterceptor())
-            .setTimeouts()
-            .build()
     }
 
     private fun OkHttpClient.Builder.setTimeouts(): OkHttpClient.Builder {
