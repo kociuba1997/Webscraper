@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "553402849905",
+    "firebase_url": "https://webscraper-69f11.firebaseio.com",
+    "project_id": "webscraper-69f11",
+    "storage_bucket": "webscraper-69f11.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553402849905:android:72d55c26e1e5fe40",
+        "android_client_info": {
+          "package_name": "com.newsscraper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553402849905-e1hmfvlntenjsl2qhk2d3mjqeou4nphl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWUPVM100XCQJEWXX2IYQoM9gzUnfv9E4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553402849905-e1hmfvlntenjsl2qhk2d3mjqeou4nphl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using WebScraperAPI.Model;
 
 namespace WebScraperAPI.Scraper
 {
@@ -91,7 +90,7 @@ namespace WebScraperAPI.Scraper
         public void getItterator()
         {
             int counter = 1;
-            List<News> news = new List<News>();
+            //List<Record> lstRecords = new List<Record>();
             foreach (HtmlNode li in doc.DocumentNode.SelectNodes("//*[@id=\"stream-items-id\"]"))
             {
                 HtmlNode userNode;
@@ -101,9 +100,13 @@ namespace WebScraperAPI.Scraper
                 try
                 {
                     userNode = li.SelectSingleNode(".//div/div[2]/div[1]/a/span[1]/strong");
+                    Console.WriteLine(userNode.InnerText);
+
                     messageNode = li.SelectSingleNode(".//div/div[2]/div[3]/p");
                     byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
                     message = Encoding.UTF8.GetString(bytes);
+                    Console.WriteLine(message);
+
 
                 }
                 catch

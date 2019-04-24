@@ -16,5 +16,15 @@ namespace WebScraperAPI.Model
         public string author;
         public string text;
         public string link;
+        public string photo;
+
+        public News(string[] tags, string author, string text, string link, string photo)
+        {
+            this.tags = tags;
+            this.author = author;
+            this.text = text;
+            this.link = link;
+            this.photo = photo;
+        }
     }
 }
