@@ -17,14 +17,16 @@ namespace WebScraperAPI.Model
         public string text;
         public string link;
         public string photo;
+        public string date;
 
-        public News(string[] tags, string author, string text, string link, string photo)
+        public News(string[] tags, string author, string text, string link, string photo, string date)
         {
             this.tags = tags;
             this.author = author;
             this.text = text;
             this.link = link;
             this.photo = photo;
+            this.date = date;
         }
     }
 }
