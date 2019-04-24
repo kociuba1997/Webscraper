@@ -17,7 +17,7 @@ namespace WebScraperAPI.Scraper
         public string message;
         public string page;
         public string photo = null;
-
+        public string date;
         protected HtmlDocument htmlPageDoc = new HtmlDocument();
         protected HtmlNodeCollection pageNodes;
         protected List<News> newsList = new List<News>();
