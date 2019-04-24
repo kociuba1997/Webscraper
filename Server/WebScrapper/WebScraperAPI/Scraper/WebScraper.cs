@@ -6,6 +6,7 @@ using System.Threading;
 using WebScraperAPI.Controllers;
 using WebScraperAPI.Model;
 using WebScraperAPI.Scraper;
+using MongoDB.Driver;
 
 namespace WebScraperAPI.Scraper
 {
@@ -23,6 +24,19 @@ namespace WebScraperAPI.Scraper
             }, null, startTimeSpan, periodTimeSpan);
         }
 
+        private List<string> FetchAllTags(IMongoDatabase db)
+        {
+            var users = db.GetCollection<User>("Users");
+            List<string> tags = new List<string>();
+            var userList = users.Find(x => true).ToList();
+            foreach(var user in userList)
+            {
+                tags.AddRange(user.tags);
+            }
+            tags = tags.Distinct().ToList();
+            return tags;
+        }
+
         private void Scrap()
         {
             // make this method async
@@ -30,17 +44,27 @@ namespace WebScraperAPI.Scraper
             // download news
             // clear database
             // add news to database
-            WykopWrapper ww = new WykopWrapper("https://www.wykop.pl/tag/gniezno/");
-            var news = ww.getNewsList();
             try
             {
                 var db = UserController.ConnectToDataBase();
                 db.DropCollection("News");
                 db.CreateCollection("News");
                 var newsCollection = db.GetCollection<News>("News");
-                newsCollection.InsertManyAsync(news);
+
+                var allTags = FetchAllTags(db);
+                List<News> newsList = new List<News>();
+                foreach (var tag in allTags)
+                {
+                    WykopWrapper ww = new WykopWrapper("https://www.wykop.pl/tag/" + tag + "/");
+                    var tagNews = ww.getNewsList(tag);
+                    newsList.AddRange(tagNews);
+
+                    // add redit
+                }
+
+                newsCollection.InsertManyAsync(newsList);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 System.Diagnostics.Debug.WriteLine("Failed");
             }

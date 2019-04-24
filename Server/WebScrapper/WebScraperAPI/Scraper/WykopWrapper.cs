@@ -18,6 +18,8 @@ namespace WebScraperAPI.Scraper
         private string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
         private string htmlUsertLink = ".//div/div/div[1]/a[1]";
         private string htmlTargetLink = ".//div/div/div[1]/a[2]";
+        private string htmlPostDateNode = ".//div/div/div[1]/a[2]/small/time";
+        private string htmlEventDateNode = ".//div/div[3]/div[3]/span/time";
         private string htlmStarting = "//*[@id=\"itemsStream\"]/li";
 
         public List<Wrapper> wrapperList = new List<Wrapper>();
@@ -26,15 +28,15 @@ namespace WebScraperAPI.Scraper
         {
         }
 
-       public List<News> getNewsList()
+       public List<News> getNewsList(string tag)
         {
             getItterator();
 
             foreach (var wrapp in wrapperList)
             {
-                string[] list = { "gorzów" };
+                string[] list = { tag };
 
-                News news =new News(list, wrapp.user,  wrapp.message, wrapp.targetLink, wrapp.photo);
+                News news = new News(list, wrapp.user,  wrapp.message.Trim(), wrapp.targetLink, wrapp.photo);
 
                 newsList.Add(news);
             }
@@ -106,6 +108,26 @@ namespace WebScraperAPI.Scraper
 
         }
 
+        public string getDate(HtmlNode dateNode)
+        {
+            try
+            {
+                // problem z zastępowaniem targetLinku tytułem wiadomosci
+                var dateNodeEvent = dateNode.SelectSingleNode(htmlEventDateNode);
+                if (dateNodeEvent == null)
+                {
+                    dateNodeEvent = dateNode.SelectSingleNode(htmlPostDateNode);
+                }
+                HtmlAttribute attribute = dateNodeEvent.Attributes["title"];
+                date = attribute.Value;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return date;
+
+        }
 
         public void getItterator()
         {
@@ -124,7 +146,10 @@ namespace WebScraperAPI.Scraper
 
                     post.photo = getPhoto(li);
 
+                    post.date = getDate(li);
+
                     wrapperList.Add(post);
+
 
                 }
                 catch
