@@ -6,7 +6,7 @@ import com.newsscraper.services.api.UserApi
 object ServiceProvider {
 
     val AUTHORIZATION_HEADER =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImhhbXVsZWMiLCJuYmYiOjE1NTQ3NTU0NzMsImV4cCI6MTU1NDc1NjY3MywiaWF0IjoxNTU0NzU1NDczfQ.P4KFU6wcWZBRxkI69DmNFCfIAm39RMiIzOJ1Brj6EtM"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkphbiIsIm5iZiI6MTU1NTMyMzA2OCwiZXhwIjoxNTU1MzI0MjY4LCJpYXQiOjE1NTUzMjMwNjh9.Xh9Lhpblb9pO5lOfR2lcs1ogt2dsmYx_VqDUc3yKXuc"
 
     var userService: UserApi =
         ServiceFactory.createRetrofitService(UserApi::class.java, Endpoints.BASE_URL)
