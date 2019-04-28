@@ -22,7 +22,7 @@ namespace WebScraperAPI
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("https://192.168.56.1:5000")
+                .UseUrls("https://192.168.0.5:5000")
                 .UseStartup<Startup>();
     }
 }
