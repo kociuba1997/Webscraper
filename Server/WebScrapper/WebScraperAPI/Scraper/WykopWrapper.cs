@@ -36,7 +36,7 @@ namespace WebScraperAPI.Scraper
             {
                 string[] list = { tag };
 
-                News news = new News(list, wrapp.user,  wrapp.message.Trim(), wrapp.targetLink, wrapp.photo);
+                News news = new News(list, wrapp.user,  wrapp.message.Trim(), wrapp.targetLink, wrapp.photo, wrapp.date);
 
                 newsList.Add(news);
             }
