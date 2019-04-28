@@ -14,7 +14,7 @@ namespace WebScraperAPI.Scraper
         public string link;
         public string user;
         public string targetLink;
-        public string message;
+        public string message = string.Empty;
         public string page;
         public string photo = null;
         public string date;
@@ -44,57 +44,7 @@ namespace WebScraperAPI.Scraper
             return decode;
         }
 
-        public string getUser(string htmlNode)
-        {
-            HtmlNode userNode;
-
-            try
-            {
-                userNode = htmlPageDoc.DocumentNode.SelectSingleNode(htmlNode);
-                user = encoder(userNode.InnerText);
-            }
-            catch (Exception ex)
-            {
-                return "Błąd";
-            }
-
-            return user;
-        }
-
-        public string getMessage(string htmlNode)
-        {
-            HtmlNode messageNode;
-
-            try
-            {
-                messageNode = htmlPageDoc.DocumentNode.SelectSingleNode(htmlNode);
-                message = encoder(messageNode.InnerText);
-            }
-            catch (Exception ex)
-            {
-                return "Błąd";
-            }
-            return message;
-
-        }
-
-        public string getTargetLink(string htmlNode)
-        {
-            HtmlNode targetLinkNode;
-
-            try
-            {
-                // problem z zastępowaniem targetLinku tytułem wiadomosci
-                targetLinkNode = htmlPageDoc.DocumentNode.SelectSingleNode(htmlNode);
-                targetLink = targetLinkNode.InnerText;
-            }
-            catch (Exception ex)
-            {
-                return "Błąd";
-            }
-            return targetLink;
-
-        }
+        
 
     }
 }

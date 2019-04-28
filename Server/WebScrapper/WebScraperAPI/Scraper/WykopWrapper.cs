@@ -16,11 +16,11 @@ namespace WebScraperAPI.Scraper
         private string htmlMessageNode = ".//div/div/div[2]/p";
         private string htmlUsereNode = ".//div/div/div[1]/a[1]/b";
         private string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
-        private string htmlUsertLink = ".//div/div/div[1]/a[1]";
-        private string htmlTargetLink = ".//div/div/div[1]/a[2]";
+        private string htmlUsertLinkNode = ".//div/div/div[1]/a[1]";
+        private string htmlTargetLinkNode = ".//div/div/div[1]/a[2]";
         private string htmlPostDateNode = ".//div/div/div[1]/a[2]/small/time";
         private string htmlEventDateNode = ".//div/div[3]/div[3]/span/time";
-        private string htlmStarting = "//*[@id=\"itemsStream\"]/li";
+        private string htlmStartingNode = "//*[@id=\"itemsStream\"]/li";
 
         public List<Wrapper> wrapperList = new List<Wrapper>();
 
@@ -40,7 +40,6 @@ namespace WebScraperAPI.Scraper
 
                 newsList.Add(news);
             }
-
             return newsList;
         }
 
@@ -55,7 +54,6 @@ namespace WebScraperAPI.Scraper
             {
                 return null;
             }
-
             return user;
         }
 
@@ -71,7 +69,6 @@ namespace WebScraperAPI.Scraper
                 return null;
             }
             return message;
-
         }
 
         public string getTargetLink(HtmlNode targetLinkNode)
@@ -79,7 +76,7 @@ namespace WebScraperAPI.Scraper
             try
             {
                 // problem z zastępowaniem targetLinku tytułem wiadomosci
-                targetLinkNode = targetLinkNode.SelectSingleNode(htmlTargetLink);
+                targetLinkNode = targetLinkNode.SelectSingleNode(htmlTargetLinkNode);
                 HtmlAttribute attribute = targetLinkNode.Attributes["href"];
                 targetLink = attribute.Value;
             }
@@ -88,14 +85,12 @@ namespace WebScraperAPI.Scraper
                 return null;
             }
             return targetLink;
-
         }
 
         public string getPhoto(HtmlNode photoNode)
         {
             try
             {
-                // problem z zastępowaniem targetLinku tytułem wiadomosci
                 photoNode = photoNode.SelectSingleNode(htmlPhotoNode);
                 HtmlAttribute attribute = photoNode.Attributes["href"];
                 photo = attribute.Value;
@@ -105,34 +100,31 @@ namespace WebScraperAPI.Scraper
                 return null;
             }
             return photo;
-
         }
 
         public string getDate(HtmlNode dateNode)
         {
             try
             {
-                // problem z zastępowaniem targetLinku tytułem wiadomosci
                 var dateNodeEvent = dateNode.SelectSingleNode(htmlEventDateNode);
                 if (dateNodeEvent == null)
                 {
                     dateNodeEvent = dateNode.SelectSingleNode(htmlPostDateNode);
                 }
-                HtmlAttribute attribute = dateNodeEvent.Attributes["title"];
-                date = attribute.Value;
+                //HtmlAttribute attribute = dateNodeEvent.Attributes["title"];
+                date = dateNodeEvent.InnerText;
             }
             catch (Exception ex)
             {
                 return null;
             }
             return date;
-
         }
 
         public void getItterator()
         {
            
-            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStarting))
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
             {
                 Wrapper post = new Wrapper();
 
@@ -149,14 +141,11 @@ namespace WebScraperAPI.Scraper
                     post.date = getDate(li);
 
                     wrapperList.Add(post);
-
-
                 }
                 catch
                 {
                    
                 }
-                
             }
         }
     }
