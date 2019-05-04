@@ -151,7 +151,7 @@ namespace WebScraperAPI.Controllers
 
         public static IMongoDatabase ConnectToDataBase()
         {
-            var client = new MongoClient("mongodb+srv://webScraperAdmin01:PodlogaAdmin01@webscrapercluster-grsrl.mongodb.net/test?retryWrites=true");
+            var client = new MongoClient("mongodb+srv://webScraperAdmin01:PASSWORD@webscrapercluster-grsrl.mongodb.net/test?retryWrites=true");
             var database = client.GetDatabase("WebScraperDB");
             return database;
         }
