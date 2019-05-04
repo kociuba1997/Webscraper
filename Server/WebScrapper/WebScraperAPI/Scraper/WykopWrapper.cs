@@ -14,23 +14,24 @@ namespace WebScraperAPI.Scraper
   
 
         private string htmlMessageNode = ".//div/div/div[2]/p";
-        private string htmlUsereNode = ".//div/div/div[1]/a[1]/b";
+        private string htmlUserNode = ".//div/div/div[1]/a[1]/b";
+        private string htmlsUserNode2 = ".//div/div[3]/div[1]/a[1]";
         private string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
+        private string htmlPhotoNode2 = ".//div/div/div[2]/div[1]/a/img";
+        //*[@id="itemsStream"]/li[47]/div/div/div[2]/div[1]/p[1]/a
         private string htmlUsertLinkNode = ".//div/div/div[1]/a[1]";
         private string htmlTargetLinkNode = ".//div/div/div[1]/a[2]";
+        private string htmlTargetLinkNode2 = ".//div/div[3]/div[2]/p/a";
         private string htmlPostDateNode = ".//div/div/div[1]/a[2]/small/time";
         private string htmlEventDateNode = ".//div/div[3]/div[3]/span/time";
         private string htlmStartingNode = "//*[@id=\"itemsStream\"]/li";
+        private string pageLink = "https://www.wykop.pl/tag/{0}/";
 
         public List<Wrapper> wrapperList = new List<Wrapper>();
 
-        public WykopWrapper(string link) : base(link) 
-        {
-        }
-
        public List<News> getNewsList(string tag)
         {
-            getItterator();
+            getItterator(tag);
 
             foreach (var wrapp in wrapperList)
             {
@@ -47,10 +48,14 @@ namespace WebScraperAPI.Scraper
         {
             try
             {
-                userNode = userNode.SelectSingleNode(htmlUsereNode);
-                user = encoder(userNode.InnerText);
+                var userNodeEvent = userNode.SelectSingleNode(htmlUserNode);
+                if(userNodeEvent == null)
+                {
+                    userNodeEvent = userNode.SelectSingleNode(htmlsUserNode2);
+                }
+                user = encoder(userNodeEvent.InnerText.TrimStart('@'));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -64,9 +69,9 @@ namespace WebScraperAPI.Scraper
                 messageNode = messageNode.SelectSingleNode(htmlMessageNode);
                 message = encoder(messageNode.InnerText);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return null;
+                return "Błędna wiadomość";
             }
             return message;
         }
@@ -75,14 +80,17 @@ namespace WebScraperAPI.Scraper
         {
             try
             {
-                // problem z zastępowaniem targetLinku tytułem wiadomosci
-                targetLinkNode = targetLinkNode.SelectSingleNode(htmlTargetLinkNode);
-                HtmlAttribute attribute = targetLinkNode.Attributes["href"];
+                var targetLinkNodeEvent = targetLinkNode.SelectSingleNode(htmlTargetLinkNode);
+                if(targetLinkNodeEvent == null || targetLinkNodeEvent.InnerText.Contains("#"))
+                {
+                   targetLinkNodeEvent = targetLinkNode.SelectSingleNode(htmlTargetLinkNode2);
+                }
+                HtmlAttribute attribute = targetLinkNodeEvent.Attributes["href"];
                 targetLink = attribute.Value;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return null;
+                return "www.wykop.pl";
             }
             return targetLink;
         }
@@ -91,11 +99,21 @@ namespace WebScraperAPI.Scraper
         {
             try
             {
-                photoNode = photoNode.SelectSingleNode(htmlPhotoNode);
-                HtmlAttribute attribute = photoNode.Attributes["href"];
-                photo = attribute.Value;
+                var photoNodeEvent = photoNode.SelectSingleNode(htmlPhotoNode);
+                if(photoNodeEvent == null || photoNodeEvent.InnerHtml.Contains("src"))
+                {
+                    photoNodeEvent = photoNode.SelectSingleNode(htmlPhotoNode2);
+                    HtmlAttribute attribute = photoNodeEvent.Attributes["src"];
+                    photo = attribute.Value;
+                }
+                else
+                {
+                    HtmlAttribute attribute = photoNodeEvent.Attributes["href"];
+                    photo = attribute.Value;
+                }
+               
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -111,19 +129,21 @@ namespace WebScraperAPI.Scraper
                 {
                     dateNodeEvent = dateNode.SelectSingleNode(htmlPostDateNode);
                 }
-                //HtmlAttribute attribute = dateNodeEvent.Attributes["title"];
+
                 date = dateNodeEvent.InnerText;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
             return date;
         }
 
-        public void getItterator()
+        public void getItterator(string tag)
         {
-           
+            string link = String.Format(pageLink, tag);
+            getPage(link);
+
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
             {
                 Wrapper post = new Wrapper();

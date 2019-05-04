@@ -23,7 +23,8 @@ namespace WebScraperAPI.Scraper
         protected List<News> newsList = new List<News>();
 
         public Wrapper() { }
-        public Wrapper(string link)
+
+        public void getPage(string link)
         {
             this.link = link;
 

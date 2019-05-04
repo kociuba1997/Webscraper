@@ -26,19 +26,13 @@ namespace WebScraperAPI.Scraper
         private string htmlEventDateNode = ".//div/div[3]/div[3]/span/time";
         private string htmlDateNode = ".//div/div[2]/div[1]/small/a/span[1]";
         private string htlmStartingNode = "//*[@id=\"stream-items-id\"]/li";
-
-
-
+        private string pageLink = "https://twitter.com/search?q=%23+{0}";
         public List<Wrapper> wrapperList = new List<Wrapper>();
-
-        public TwitterWrapper(string link) : base(link)
-        {
-        }
 
 
         public List<News> getNewsList(string tag)
         {
-            getItterator();
+            getItterator(tag);
 
             foreach (var wrapp in wrapperList)
             {
@@ -159,8 +153,10 @@ namespace WebScraperAPI.Scraper
             return date;
         }
 
-        public void getItterator()
+        public void getItterator(string tag)
         {
+            string link = String.Format(pageLink, tag);
+            getPage(link);
 
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
             {
