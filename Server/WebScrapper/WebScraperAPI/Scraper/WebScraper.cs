@@ -55,16 +55,17 @@ namespace WebScraperAPI.Scraper
                 List<News> newsList = new List<News>();
                 foreach (var tag in allTags)
                 {
-                    //WykopWrapper ww = new WykopWrapper("https://www.wykop.pl/tag/" + tag + "/");
-                    //var tagNews = ww.getNewsList(tag);
+                    WykopWrapper ww = new WykopWrapper("https://www.wykop.pl/tag/" + tag + "/");
+                    var tagNews = ww.getNewsList(tag);
+                    newsList.AddRange(tagNews);
 
                     //RedditWrapper rw = new RedditWrapper("https://www.reddit.com/search?q=%23" + tag);
                     //var tagNews2 = rw.getNewsList(tag); 
                     //newsList.AddRange(tagNews);
 
-                    TwitterWrapper rw = new TwitterWrapper("https://twitter.com/search?q=%23+" + tag);
-                    var tagNews3 = rw.getNewsList(tag);
-                    newsList.AddRange(tagNews3);
+                    //TwitterWrapper rw = new TwitterWrapper("https://twitter.com/search?q=%23+" + tag);
+                    //var tagNews3 = rw.getNewsList(tag);
+                    //newsList.AddRange(tagNews3);
 
                     // add redit
                 }
