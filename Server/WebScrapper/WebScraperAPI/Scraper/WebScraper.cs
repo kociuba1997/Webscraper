@@ -46,35 +46,36 @@ namespace WebScraperAPI.Scraper
             // add news to database
             try
             {
-                var db = UserController.ConnectToDataBase();
-                db.DropCollection("News");
-                db.CreateCollection("News");
-                var newsCollection = db.GetCollection<News>("News");
+                //var db = UserController.ConnectToDataBase();
+                //db.DropCollection("News");
+                //db.CreateCollection("News");
+                //var newsCollection = db.GetCollection<News>("News");
 
-                var allTags = FetchAllTags(db);
-                List<News> newsList = new List<News>();
-                foreach (var tag in allTags)
-                {
-                    WykopWrapper ww = new WykopWrapper("https://www.wykop.pl/tag/" + tag + "/");
-                    var tagNews = ww.getNewsList(tag);
-                    newsList.AddRange(tagNews);
-
-                    //RedditWrapper rw = new RedditWrapper("https://www.reddit.com/search?q=%23" + tag);
-                    //var tagNews2 = rw.getNewsList(tag); 
+                //var allTags = FetchAllTags(db);
+                //List<News> newsList = new List<News>();
+                //foreach (var tag in allTags)
+                //{
+                    //WykopWrapper ww = new WykopWrapper();
+                    //var tagNews = ww.getNewsList("gorzow");
                     //newsList.AddRange(tagNews);
 
-                    //TwitterWrapper rw = new TwitterWrapper("https://twitter.com/search?q=%23+" + tag);
-                    //var tagNews3 = rw.getNewsList(tag);
+                    //RedditWrapper rw = new RedditWrapper();
+                    //var tagNews2 = rw.getNewsList("almslmck"); 
+                    //newsList.AddRange(tagNews);
+
+                    TwitterWrapper rw = new TwitterWrapper();
+                    var tagNews3 = rw.getNewsList("gorzow");
                     //newsList.AddRange(tagNews3);
 
                     // add redit
-                }
+                //}
 
-                newsCollection.InsertManyAsync(newsList);
+                //newsCollection.InsertManyAsync(newsList);
+            
             }
             catch(Exception)
             {
-                System.Diagnostics.Debug.WriteLine("Failed");
+                System.Diagnostics.Debug.WriteLine("Failed"); // tu musi być ibsługa braku wydrzeń dla danego tagu
             }
         }
     }

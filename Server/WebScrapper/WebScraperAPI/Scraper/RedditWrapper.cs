@@ -20,16 +20,14 @@ namespace WebScraperAPI.Scraper
         private string htmlTargetLinkNode = ".//div[2]/div/div[2]/div[1]/span/a";
         private string htmlDateNode = ".//div[2]/div/div[2]/div[2]/div[2]/a";
         private string htlmStartingNode = "//*[@id=\"SHORTCUT_FOCUSABLE_DIV\"]/div[2]/div/div/div/div[2]/div[3]/div[1]/div[3]/div";
+        private string pageLink = "https://www.reddit.com/search?q=%23{0}";
 
         public List<Wrapper> wrapperList = new List<Wrapper>();
 
-        public RedditWrapper(string link) : base(link)
-        {
-        }
 
         public List<News> getNewsList(string tag)
         {
-            getItterator();
+            getItterator(tag);
 
             foreach (var wrapp in wrapperList)
             {
@@ -132,8 +130,10 @@ namespace WebScraperAPI.Scraper
             return date;
         }
 
-        public void getItterator()
+        public void getItterator(string tag)
         {
+            string link = String.Format(pageLink, tag);
+            getPage(link);
 
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
             {
