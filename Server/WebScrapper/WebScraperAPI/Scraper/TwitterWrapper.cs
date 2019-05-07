@@ -5,115 +5,181 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using WebScraperAPI.Model;
 
 namespace WebScraperAPI.Scraper
 {
-    class TwitterWrapper
+    class TwitterWrapper : Wrapper
     {
+        //*[@id="stream-items-id"]
 
-        string link;
-        string user;
-        string targetLink;
-        string message;
-        string page;
+        private string htmlMessageNode1 = ".//div/div[2]/div[2]/p";
+        private string htmlMessageNode2 = ".//div/div[2]/div[3]/p";
+        private string htmlUsereNode = ".//div/div[2]/div[1]/a/span[1]/strong";
+        private string htmlPhotoNode1 = ".//div/div[2]/div[3]/div/div/div/div/img";
+        private string htmlPhotoNode2 = ".//div/div[2]/div[4]/div/div/div/div/img ";
+        private string htmlPhotoNode3 = ".//div/div[2]/div[3]/div/div/div/div[1]/div/img";
+        private string htmlUsertLinkNode = ".//div/div/div[1]/a[1]";
+        private string htmlTargetLinkNode = ".//div/div[2]/div[2]/p/a";
+        private string htmlTargetLinkAnswearNode = ".//div/div[2]/div[3]/p/a";
+        private string htmlPostDateNode = ".//div/div/div[1]/a[2]/small/time";
+        private string htmlEventDateNode = ".//div/div[3]/div[3]/span/time";
+        private string htmlDateNode = ".//div/div[2]/div[1]/small/a/span[1]";
+        private string htlmStartingNode = "//*[@id=\"stream-items-id\"]/li";
+        private string pageLink = "https://twitter.com/search?q=%23+{0}";
+        public List<Wrapper> wrapperList = new List<Wrapper>();
 
-        HtmlDocument doc = new HtmlDocument();
-        HtmlNodeCollection nodes;
 
-        public TwitterWrapper(string link)
+        public List<News> getNewsList(string tag)
         {
-            this.link = link;
+            getItterator(tag);
 
-            using (var webClient = new WebClient())
+            foreach (var wrapp in wrapperList)
             {
-                page = webClient.DownloadString(link);
+                string[] list = { tag };
 
-                doc.LoadHtml(page);
+                News news = new News(list, wrapp.user, wrapp.message, wrapp.targetLink, wrapp.photo, wrapp.date);
+
+                newsList.Add(news);
             }
-
+            return newsList;
         }
 
-        public string getUser()
+        public string getUser(HtmlNode userNode)
         {
-            HtmlNode userNode;
-
             try
             {
-                userNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"stream-item-tweet-1110095336188665856\"]/div/div[2]/div[1]/a/span[1]/strong");
-                byte[] bytes = Encoding.Default.GetBytes(userNode.InnerText);
-                user = Encoding.UTF8.GetString(bytes);
+                userNode = userNode.SelectSingleNode(htmlUsereNode);
+                user = encoder(userNode.InnerText);
             }
             catch (Exception ex)
             {
-                return "Błąd";
+                return null;
             }
             return user;
-
         }
 
-        public string getMessage()
+        public string getMessage(HtmlNode messageNode)
         {
-            HtmlNode messageNode;
-
             try
             {
-                messageNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"stream-item-tweet-1110095336188665856\"]/div/div[2]/div[3]/p");
-                byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
-                message = Encoding.UTF8.GetString(bytes);
+                var messageEvent = messageNode.SelectSingleNode(htmlMessageNode1);
+                if (messageEvent == null)
+                {
+                    messageEvent = messageNode.SelectSingleNode(htmlMessageNode2);
+                }
+                message = encoder(messageEvent.InnerText);
+
+                if (message.Contains("pic.twitter"))
+                {
+                    int index = message.IndexOf("pic.twitter");
+                    message = message.Substring(0, index);
+                }
             }
             catch (Exception ex)
             {
-                return "Błąd";
+                return null;
             }
             return message;
+        }
 
-        }//*[@id="stream-item-tweet-1107714778510831618"]/div/div[2]/div[3]/p
-
-        public string getTargetLink()
+        public string getTargetLink(HtmlNode targetLinkNode)
         {
-            HtmlNode targetLinkNode;
-
             try
             {
-                // problem z zastępowaniem targetLinku bo odwoluje się do wiekszego postu
-                targetLinkNode = doc.DocumentNode.SelectSingleNode("//*[@id=\"stream-item-tweet-1110095336188665856\"]/div");
-                targetLink = targetLinkNode.InnerText;
+              if(targetLinkNode.SelectSingleNode(htmlTargetLinkNode) != null)
+                {
+                    foreach (HtmlNode a in htmlPageDoc.DocumentNode.SelectNodes(htmlTargetLinkNode))
+                    {
+                        HtmlAttribute attribute = a.Attributes["href"];
+                        if(attribute.Value.Contains("https"))
+                        { targetLink = attribute.Value; break; }
+                       
+                    }
+                }
+                else
+                {
+                    foreach (HtmlNode a in htmlPageDoc.DocumentNode.SelectNodes(htmlTargetLinkAnswearNode))
+                    {
+                        HtmlAttribute attribute = a.Attributes["href"];
+                        if (attribute.Value.Contains("https"))
+                        { targetLink = attribute.Value; break; }
+
+                    }
+                }
+                
             }
             catch (Exception ex)
             {
-                return "Błąd";
+                    return null;
             }
             return targetLink;
-
         }
 
-        public void getItterator()
+        public string getPhoto(HtmlNode photoNode)
         {
-            int counter = 1;
-            //List<Record> lstRecords = new List<Record>();
-            foreach (HtmlNode li in doc.DocumentNode.SelectNodes("//*[@id=\"stream-items-id\"]"))
+            try
             {
-                HtmlNode userNode;
-                HtmlNode messageNode;
-                HtmlNode targetLinkNode;
+                var photoEvent = photoNode.SelectSingleNode(htmlPhotoNode1);
+                if (photoEvent == null)
+                {
+                    photoEvent = photoNode.SelectSingleNode(htmlPhotoNode2);
+                }
+                if (photoEvent == null)
+                {
+                    photoEvent = photoNode.SelectSingleNode(htmlPhotoNode3);
+                }
+                HtmlAttribute attribute = photoEvent.Attributes["src"];
+                photo = attribute.Value;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return photo;
+        }
+
+        public string getDate(HtmlNode dateNode)
+        {
+            try
+            {
+                dateNode = dateNode.SelectSingleNode(htmlDateNode);
+                date = dateNode.InnerText;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return date;
+        }
+
+        public void getItterator(string tag)
+        {
+            string link = String.Format(pageLink, tag);
+            getPage(link);
+
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
+            {
+                Wrapper post = new Wrapper();
 
                 try
                 {
-                    userNode = li.SelectSingleNode(".//div/div[2]/div[1]/a/span[1]/strong");
-                    Console.WriteLine(userNode.InnerText);
+                    post.user = getUser(li);
 
-                    messageNode = li.SelectSingleNode(".//div/div[2]/div[3]/p");
-                    byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
-                    message = Encoding.UTF8.GetString(bytes);
-                    Console.WriteLine(message);
+                    post.message = getMessage(li);
 
+                    post.targetLink = getTargetLink(li);
 
+                    post.photo = getPhoto(li);
+
+                    post.date = getDate(li);
+
+                    wrapperList.Add(post);
                 }
                 catch
                 {
-                    Console.WriteLine("Błąd");
+
                 }
-                counter++;
             }
         }
     }

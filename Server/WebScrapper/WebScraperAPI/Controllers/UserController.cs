@@ -97,10 +97,10 @@ namespace WebScraperAPI.Controllers
             }
         }
 
-        // POST: api/user/tags
+        // PUT: api/user/tags
         [Route("tags")]
-        [HttpPost]
-        public IActionResult PostTags([FromBody] string[] tags)
+        [HttpPut]
+        public IActionResult PutTags([FromBody] Tags tags)
         {
             var token = Request.Headers["Authorization"];
             try
@@ -111,15 +111,7 @@ namespace WebScraperAPI.Controllers
                 if (results.Count > 0)
                 {
                     var user = results.First();
-                    List<string> tagsList = tags.ToList();
-                    foreach (var tag in tags)
-                    {
-                        if(!tagsList.Contains(tag))
-                        {
-                            tagsList.Add(tag);
-                        }
-                    }
-                    user.tags = tagsList.ToArray();
+                    user.tags = tags.tags.ToArray();
                     usersCollection.ReplaceOne(x => x.token == token, user);
                     return StatusCode(201);
                 }
@@ -159,7 +151,7 @@ namespace WebScraperAPI.Controllers
 
         public static IMongoDatabase ConnectToDataBase()
         {
-            var client = new MongoClient("mongodb+srv://webScraperAdmin01:PASS@webscrapercluster-grsrl.mongodb.net/test?retryWrites=true");
+            var client = new MongoClient("mongodb+srv://webScraperAdmin01:PASSWORD@webscrapercluster-grsrl.mongodb.net/test?retryWrites=true");
             var database = client.GetDatabase("WebScraperDB");
             return database;
         }
