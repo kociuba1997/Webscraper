@@ -11,7 +11,7 @@ import com.newsscraper.R
 import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.GetNewsReceiver
 import com.newsscraper.transportobjects.NewsDTO
-import com.newsscraper.ui.MainActivity
+import com.newsscraper.ui.NavigationActivity
 import kotlinx.android.synthetic.main.fragment_news_list.*
 
 class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNewsReceiver {
@@ -32,19 +32,20 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNew
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as NavigationActivity).unlockDrawerLayout()
 //        viewModel.getNewsList().observe(this, Observer<List<News>> { news ->
 //            news?.let {
 //                populateNewsList(news)
 //            }
 //        })
         ServiceManager.getNews(this)
-        sendToAnalyticsButton.setOnClickListener {
-            if (tagEditText.text.isNotEmpty()) {
-                (activity as MainActivity).sendToAnalytics(
-                    tagEditText.text.toString(),
-                    Bundle().apply { putInt("TAG", tagEditText.id) })
-            }
-        }
+//        sendToAnalyticsButton.setOnClickListener {
+//            if (tagEditText.text.isNotEmpty()) {
+//                (activity as MainActivity).sendToAnalytics(
+//                    tagEditText.text.toString(),
+//                    Bundle().apply { putInt("TAG", tagEditText.id) })
+//            }
+//        }
     }
 
     private fun populateNewsList(newsList: List<NewsDTO>) {

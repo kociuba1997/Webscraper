@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.newsscraper.R
 import com.newsscraper.transportobjects.NewsDTO
-import com.newsscraper.ui.MainActivity
+import com.newsscraper.ui.NavigationActivity
 import kotlinx.android.synthetic.main.item_news_list.view.*
 
 class NewsListAdapter(private val items: List<NewsDTO>, private val clickListener: OnItemClickListener) :
@@ -24,7 +24,7 @@ class NewsListAdapter(private val items: List<NewsDTO>, private val clickListene
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(items[position], clickListener)
+        (holder as ViewHolder).bind(items[holder.adapterPosition], clickListener)
     }
 
     override fun getItemCount(): Int {
@@ -38,8 +38,8 @@ class NewsListAdapter(private val items: List<NewsDTO>, private val clickListene
             setOnClickListener {
                 listener.onItemClick(news, it)
             }
-            if (news.photo != null) {
-                (context as MainActivity).setImage(newsImageView, news.photo, true)
+            if (news.photo?.isNotEmpty() == true) {
+                (context as NavigationActivity).setImage(newsImageView, news.photo, true)
             }
         }
 
@@ -47,7 +47,9 @@ class NewsListAdapter(private val items: List<NewsDTO>, private val clickListene
             titleTextView.text = news.text?.trim()
             dateTextView.text = "11.04.2019 15:24"
             val sb = StringBuilder("tagi: ")
-            authorTextView.text = news.author
+            if(news.author != null) {
+                authorTextView.text = news.author
+            }
             tagTextView.text = news.tags.joinTo(sb, ", ")
         }
     }

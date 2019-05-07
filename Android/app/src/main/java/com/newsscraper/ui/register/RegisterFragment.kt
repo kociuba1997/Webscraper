@@ -10,6 +10,7 @@ import com.newsscraper.R
 import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.RegisterReceiver
 import com.newsscraper.transportobjects.UserDTO
+import com.newsscraper.ui.NavigationActivity
 import kotlinx.android.synthetic.main.fragment_register.*
 
 
@@ -24,6 +25,7 @@ class RegisterFragment : Fragment(), RegisterReceiver {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as NavigationActivity).lockDrawerLayout()
         registerButton.setOnClickListener {
             ServiceManager.register(this, UserDTO(usernameEditText.text.toString(), passwordEditText.text.toString()))
         }

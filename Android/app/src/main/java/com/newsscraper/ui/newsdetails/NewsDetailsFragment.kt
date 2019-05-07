@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.newsscraper.R
 import com.newsscraper.transportobjects.NewsDTO
-import com.newsscraper.ui.MainActivity
+import com.newsscraper.ui.NavigationActivity
 import kotlinx.android.synthetic.main.fragment_news_details.*
 
 class NewsDetailsFragment : Fragment() {
@@ -21,9 +21,10 @@ class NewsDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as NavigationActivity).lockDrawerLayout()
         val news: NewsDTO = arguments?.getSerializable("news") as NewsDTO
         news.photo?.let {
-            (activity as MainActivity).setImage(newsImageView, it)
+            (activity as NavigationActivity).setImage(newsImageView, it)
         }
         dateTextView.text = "12.04.2019 14:59"
         authorTextView.text = news.author

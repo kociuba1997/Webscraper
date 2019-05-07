@@ -10,6 +10,7 @@ import com.newsscraper.R
 import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.LoginReceiver
 import com.newsscraper.transportobjects.UserDTO
+import com.newsscraper.ui.NavigationActivity
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -24,6 +25,7 @@ class LoginFragment : Fragment(), LoginReceiver {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as NavigationActivity).unlockDrawerLayout()
         loginButton.setOnClickListener {
             ServiceManager.login(this, UserDTO(usernameEditText.text.toString(), passwordEditText.text.toString()))
         }
