@@ -37,6 +37,20 @@ namespace WebScraperAPI.Scraper
 
         }
 
+        public async Task getPageAsync(string link)
+        {
+            this.link = link;
+
+            using (var webClient = new WebClient())
+            {
+                page = await webClient.DownloadStringTaskAsync(link);
+
+                htmlPageDoc.LoadHtml(page);
+            }
+
+        }
+
+
         public string encoder(string en)
         {
             byte[] bytes = Encoding.Default.GetBytes(en);

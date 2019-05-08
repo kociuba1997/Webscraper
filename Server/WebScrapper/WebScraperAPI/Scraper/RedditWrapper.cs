@@ -24,16 +24,30 @@ namespace WebScraperAPI.Scraper
 
         public List<Wrapper> wrapperList = new List<Wrapper>();
 
-
         public List<News> getNewsList(string tag)
         {
             getItterator(tag);
+            
+            foreach (var wrapp in wrapperList)
+            {
+                string[] list = { tag };
+
+                News news = new News(list, wrapp.user, wrapp.message.Trim(), wrapp.targetLink, wrapp.photo, wrapp.date, wrapp.page);
+
+                newsList.Add(news);
+            }
+            return newsList;
+        }
+
+        public async Task<List<News>> getNewsListAsync(string tag)
+        {
+            await getItteratorAsync(tag);
 
             foreach (var wrapp in wrapperList)
             {
                 string[] list = { tag };
 
-                News news = new News(list, wrapp.user, wrapp.message.Trim(), wrapp.targetLink, wrapp.photo, wrapp.date);
+                News news = new News(list, wrapp.user, wrapp.message.Trim(), wrapp.targetLink, wrapp.photo, wrapp.date, wrapp.page);
 
                 newsList.Add(news);
             }
@@ -49,7 +63,7 @@ namespace WebScraperAPI.Scraper
                 user = encoder(userNode.InnerText);
                 user = user.Substring(2);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -64,9 +78,9 @@ namespace WebScraperAPI.Scraper
                 messageNode = messageNode.SelectSingleNode(htmlMessageNode);
                 message = encoder(messageNode.InnerText);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return null;
+                return "Błędna wiadomość";
             }
             return message;
 
@@ -81,9 +95,9 @@ namespace WebScraperAPI.Scraper
                 targetLink = "https://www.reddit.com";
                 targetLink += attribute.Value;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return null;
+                return "https://www.reddit.com/";
             }
             return targetLink;
 
@@ -103,7 +117,7 @@ namespace WebScraperAPI.Scraper
 
                 photo = matches[0].Groups[0].Value.TrimStart('(').TrimEnd(')');
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -123,7 +137,7 @@ namespace WebScraperAPI.Scraper
                 //HtmlAttribute attribute = dateNodeEvent.Attributes["title"];
                 date = dateNodeEvent.InnerText;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -134,7 +148,7 @@ namespace WebScraperAPI.Scraper
         {
             string link = String.Format(pageLink, tag);
             getPage(link);
-
+            page = "Reddit";
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
             {
                 Wrapper post = new Wrapper();
@@ -150,6 +164,42 @@ namespace WebScraperAPI.Scraper
                     post.photo = getPhoto(li);
 
                     post.date = getDate(li);
+
+                    post.page = page;
+
+                    wrapperList.Add(post);
+
+                }
+                catch
+                {
+
+                }
+
+            }
+        }
+
+        public async Task getItteratorAsync(string tag)
+        {
+            string link = String.Format(pageLink, tag);
+            await getPageAsync(link);
+            page = "Reddit";
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
+            {
+                Wrapper post = new Wrapper();
+
+                try
+                {
+                    post.user = getUser(li);
+
+                    post.message = getMessage(li);
+
+                    post.targetLink = getTargetLink(li);
+
+                    post.photo = getPhoto(li);
+
+                    post.date = getDate(li);
+
+                    post.page = page;
 
                     wrapperList.Add(post);
 

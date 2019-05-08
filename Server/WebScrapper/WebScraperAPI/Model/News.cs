@@ -18,8 +18,9 @@ namespace WebScraperAPI.Model
         public string link;
         public string photo;
         public string date;
+        public string page;
 
-        public News(string[] tags, string author, string text, string link, string photo, string date)
+        public News(string[] tags, string author, string text, string link, string photo, string date, string page)
         {
             this.tags = tags;
             this.author = author;
@@ -27,6 +28,7 @@ namespace WebScraperAPI.Model
             this.link = link;
             this.photo = photo;
             this.date = date;
+            this.page = page;
         }
     }
 }
