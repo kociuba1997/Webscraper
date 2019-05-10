@@ -7,6 +7,7 @@ using WebScraperAPI.Controllers;
 using WebScraperAPI.Model;
 using WebScraperAPI.Scraper;
 using MongoDB.Driver;
+using System.Diagnostics;
 
 namespace WebScraperAPI.Scraper
 {
@@ -46,32 +47,35 @@ namespace WebScraperAPI.Scraper
             // add news to database
             try
             {
-                //var db = UserController.ConnectToDataBase();
-                //db.DropCollection("News");
-                //db.CreateCollection("News");
-                //var newsCollection = db.GetCollection<News>("News");
+                var db = UserController.ConnectToDataBase();
+                db.DropCollection("News");
+                db.CreateCollection("News");
+                var newsCollection = db.GetCollection<News>("News");
 
-                //var allTags = FetchAllTags(db);
-                //List<News> newsList = new List<News>();
-                //foreach (var tag in allTags)
-                //{
-                    //WykopWrapper ww = new WykopWrapper();
-                    //var tagNews = ww.getNewsList("gorzow");
-                    //newsList.AddRange(tagNews);
+                var allTags = FetchAllTags(db);
+                List<News> newsList = new List<News>();
+                foreach (var tag in allTags)
+                {
+                        WykopWrapper ww = new WykopWrapper();
+                        var tagNews = ww.getNewsListAsync(tag);
 
-                    //RedditWrapper rw = new RedditWrapper();
-                    //var tagNews2 = rw.getNewsList("almslmck"); 
-                    //newsList.AddRange(tagNews);
+                        RedditWrapper rw = new RedditWrapper();
+                        var tagNews2 = rw.getNewsListAsync(tag);
 
-                    TwitterWrapper rw = new TwitterWrapper();
-                    var tagNews3 = rw.getNewsList("gorzow");
-                    //newsList.AddRange(tagNews3);
+                        TwitterWrapper tw = new TwitterWrapper();
+                        var tagNews3 = tw.getNewsListAsync(tag);
+
+                        Task.WaitAll(new Task[] { tagNews, tagNews2, tagNews3 });
+
+                        newsList.AddRange(tagNews.Result);
+                        newsList.AddRange(tagNews2.Result);
+                        newsList.AddRange(tagNews3.Result);
 
                     // add redit
-                //}
+                }
 
-                //newsCollection.InsertManyAsync(newsList);
-            
+                newsCollection.InsertManyAsync(newsList);
+
             }
             catch(Exception)
             {
