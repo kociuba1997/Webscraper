@@ -27,18 +27,34 @@ namespace WebScraperAPI.Scraper
         private string htmlDateNode = ".//div/div[2]/div[1]/small/a/span[1]";
         private string htlmStartingNode = "//*[@id=\"stream-items-id\"]/li";
         private string pageLink = "https://twitter.com/search?q=%23+{0}";
+
         public List<Wrapper> wrapperList = new List<Wrapper>();
 
 
         public List<News> getNewsList(string tag)
         {
             getItterator(tag);
+            
+            foreach (var wrapp in wrapperList)
+            {
+                string[] list = { tag };
+
+                News news = new News(list, wrapp.user, wrapp.message, wrapp.targetLink, wrapp.photo, wrapp.date, wrapp.page);
+
+                newsList.Add(news);
+            }
+            return newsList;
+        }
+
+        public async Task<List<News>> getNewsListAsync(string tag)
+        {
+           await getItteratorAsync(tag);
 
             foreach (var wrapp in wrapperList)
             {
                 string[] list = { tag };
 
-                News news = new News(list, wrapp.user, wrapp.message, wrapp.targetLink, wrapp.photo, wrapp.date);
+                News news = new News(list, wrapp.user, wrapp.message, wrapp.targetLink, wrapp.photo, wrapp.date, wrapp.page);
 
                 newsList.Add(news);
             }
@@ -52,7 +68,7 @@ namespace WebScraperAPI.Scraper
                 userNode = userNode.SelectSingleNode(htmlUsereNode);
                 user = encoder(userNode.InnerText);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -76,9 +92,9 @@ namespace WebScraperAPI.Scraper
                     message = message.Substring(0, index);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return null;
+                return "Błędna wiadomość";
             }
             return message;
         }
@@ -109,9 +125,9 @@ namespace WebScraperAPI.Scraper
                 }
                 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                    return null;
+                    return "https://twitter.com/";
             }
             return targetLink;
         }
@@ -132,7 +148,7 @@ namespace WebScraperAPI.Scraper
                 HtmlAttribute attribute = photoEvent.Attributes["src"];
                 photo = attribute.Value;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -146,7 +162,7 @@ namespace WebScraperAPI.Scraper
                 dateNode = dateNode.SelectSingleNode(htmlDateNode);
                 date = dateNode.InnerText;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -157,7 +173,7 @@ namespace WebScraperAPI.Scraper
         {
             string link = String.Format(pageLink, tag);
             getPage(link);
-
+            page = "Twitter";
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
             {
                 Wrapper post = new Wrapper();
@@ -173,6 +189,40 @@ namespace WebScraperAPI.Scraper
                     post.photo = getPhoto(li);
 
                     post.date = getDate(li);
+
+                    post.page = page;
+
+                    wrapperList.Add(post);
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
+        public async Task getItteratorAsync(string tag)
+        {
+            string link = String.Format(pageLink, tag);
+            await getPageAsync(link);
+            page = "Twitter";
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
+            {
+                Wrapper post = new Wrapper();
+
+                try
+                {
+                    post.user = getUser(li);
+
+                    post.message = getMessage(li);
+
+                    post.targetLink = getTargetLink(li);
+
+                    post.photo = getPhoto(li);
+
+                    post.date = getDate(li);
+
+                    post.page = page;
 
                     wrapperList.Add(post);
                 }

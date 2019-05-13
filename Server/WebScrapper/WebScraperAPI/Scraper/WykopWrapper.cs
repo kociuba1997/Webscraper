@@ -11,14 +11,11 @@ namespace WebScraperAPI.Scraper
 {
     class WykopWrapper : Wrapper
     {
-  
-
         private string htmlMessageNode = ".//div/div/div[2]/p";
         private string htmlUserNode = ".//div/div/div[1]/a[1]/b";
         private string htmlsUserNode2 = ".//div/div[3]/div[1]/a[1]";
         private string htmlPhotoNode = ".//div/div/div[2]/div[1]/a";
         private string htmlPhotoNode2 = ".//div/div/div[2]/div[1]/a/img";
-        //*[@id="itemsStream"]/li[47]/div/div/div[2]/div[1]/p[1]/a
         private string htmlUsertLinkNode = ".//div/div/div[1]/a[1]";
         private string htmlTargetLinkNode = ".//div/div/div[1]/a[2]";
         private string htmlTargetLinkNode2 = ".//div/div[3]/div[2]/p/a";
@@ -32,12 +29,27 @@ namespace WebScraperAPI.Scraper
        public List<News> getNewsList(string tag)
         {
             getItterator(tag);
+            
+            foreach (var wrapp in wrapperList)
+            {
+                string[] list = { tag };
+
+                News news = new News(list, wrapp.user,  wrapp.message.Trim(), wrapp.targetLink, wrapp.photo, wrapp.date, wrapp.page);
+
+                newsList.Add(news);
+            }
+            return newsList;
+        }
+
+        public async Task<List<News>> getNewsListAsync(string tag)
+        {
+            await getItteratorAsync(tag);
 
             foreach (var wrapp in wrapperList)
             {
                 string[] list = { tag };
 
-                News news = new News(list, wrapp.user,  wrapp.message.Trim(), wrapp.targetLink, wrapp.photo, wrapp.date);
+                News news = new News(list, wrapp.user, wrapp.message.Trim(), wrapp.targetLink, wrapp.photo, wrapp.date, wrapp.page);
 
                 newsList.Add(news);
             }
@@ -143,6 +155,7 @@ namespace WebScraperAPI.Scraper
         {
             string link = String.Format(pageLink, tag);
             getPage(link);
+            page = "Wykop";
 
             foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
             {
@@ -160,11 +173,46 @@ namespace WebScraperAPI.Scraper
 
                     post.date = getDate(li);
 
+                    post.page = page;
+
                     wrapperList.Add(post);
                 }
                 catch
                 {
                    
+                }
+            }
+        }
+
+        public async Task getItteratorAsync(string tag)
+        {
+            string link = String.Format(pageLink, tag);
+            await getPageAsync(link);
+            page = "Wykop";
+
+            foreach (HtmlNode li in htmlPageDoc.DocumentNode.SelectNodes(htlmStartingNode))
+            {
+                Wrapper post = new Wrapper();
+
+                try
+                {
+                    post.user = getUser(li);
+
+                    post.message = getMessage(li);
+
+                    post.targetLink = getTargetLink(li);
+
+                    post.photo = getPhoto(li);
+
+                    post.date = getDate(li);
+
+                    post.page = page;
+
+                    wrapperList.Add(post);
+                }
+                catch
+                {
+
                 }
             }
         }
