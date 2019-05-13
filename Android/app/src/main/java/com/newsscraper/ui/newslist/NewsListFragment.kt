@@ -1,9 +1,7 @@
 package com.newsscraper.ui.newslist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -27,25 +25,31 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNew
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_news_list, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.activity_navigation_drawer, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.logout -> {
+                view?.findNavController()?.navigate(R.id.action_newsListFragment_to_loginFragment)
+                true
+            }
+            R.id.tags -> {
+                view?.findNavController()?.navigate(R.id.action_newsListFragment_to_tagsFragment)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as NavigationActivity).unlockDrawerLayout()
-//        viewModel.getNewsList().observe(this, Observer<List<News>> { news ->
-//            news?.let {
-//                populateNewsList(news)
-//            }
-//        })
         ServiceManager.getNews(this)
-//        sendToAnalyticsButton.setOnClickListener {
-//            if (tagEditText.text.isNotEmpty()) {
-//                (activity as MainActivity).sendToAnalytics(
-//                    tagEditText.text.toString(),
-//                    Bundle().apply { putInt("TAG", tagEditText.id) })
-//            }
-//        }
     }
 
     private fun populateNewsList(newsList: List<NewsDTO>) {

@@ -25,7 +25,6 @@ class RegisterFragment : Fragment(), RegisterReceiver {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as NavigationActivity).lockDrawerLayout()
         registerButton.setOnClickListener {
             ServiceManager.register(this, UserDTO(usernameEditText.text.toString(), passwordEditText.text.toString()))
         }

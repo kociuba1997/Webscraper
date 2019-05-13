@@ -8,6 +8,8 @@
         <action
           android:id="@+id/action_newsListFragment_to_newsDetailsFragment"
           app:destination="@id/newsDetailsFragment" />
+        <action android:id="@+id/action_newsListFragment_to_loginFragment" app:destination="@id/loginFragment"/>
+        <action android:id="@+id/action_newsListFragment_to_tagsFragment" app:destination="@id/tagsFragment"/>
     </fragment>
     <fragment android:id="@+id/registerFragment" android:name="com.newsscraper.ui.register.RegisterFragment"
               android:label="RegisterFragment">
@@ -22,4 +24,6 @@
       android:id="@+id/newsDetailsFragment"
       android:name="com.newsscraper.ui.newsdetails.NewsDetailsFragment"
       android:label="NewsDetailsFragment" />
+    <fragment android:id="@+id/tagsFragment" android:name="com.newsscraper.ui.tags.TagsFragment"
+              android:label="TagsFragment"/>
 </navigation>

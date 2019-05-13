@@ -1,9 +1,8 @@
 package com.newsscraper.services
 
-import com.newsscraper.services.apireceivers.GetNewsReceiver
-import com.newsscraper.services.apireceivers.LoginReceiver
-import com.newsscraper.services.apireceivers.RegisterReceiver
+import com.newsscraper.services.apireceivers.*
 import com.newsscraper.transportobjects.NewsDTO
+import com.newsscraper.transportobjects.TagsDTO
 import com.newsscraper.transportobjects.UserDTO
 import rx.Observable
 import rx.Subscription
@@ -38,6 +37,22 @@ object ServiceManager {
             .login(user),
             Action1 { receiver.onLoginSuccess(it as String) },
             Action1 { e -> receiver.onLoginError() })
+    }
+
+    fun getTags(receiver: GetTagsReceiver) {
+        setupRequest(ServiceProvider
+            .userService
+            .getTags(),
+            Action1 { receiver.onGetTagsSuccess(it as List<String>) },
+            Action1 { e -> receiver.onGetTagsError() })
+    }
+
+    fun putTags(receiver: PutTagsReceiver, tags: List<String>) {
+        setupRequest(ServiceProvider
+            .userService
+            .putTags(TagsDTO(tags)),
+            Action1 { receiver.onPutTagsSuccess() },
+            Action1 { e -> receiver.onPutTagsError() })
     }
 
     private fun setupRequest(

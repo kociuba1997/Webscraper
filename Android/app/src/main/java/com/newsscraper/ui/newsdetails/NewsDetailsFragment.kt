@@ -21,7 +21,6 @@ class NewsDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as NavigationActivity).lockDrawerLayout()
         val news: NewsDTO = arguments?.getSerializable("news") as NewsDTO
         news.photo?.let {
             (activity as NavigationActivity).setImage(newsImageView, it)
