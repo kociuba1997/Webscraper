@@ -1,4 +1,4 @@
-package com.newsscraper.data.db
+package com.newsscraper.data.db.news
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

@@ -8,9 +8,10 @@ import androidx.fragment.app.Fragment
 import com.newsscraper.R
 import com.newsscraper.transportobjects.NewsDTO
 import com.newsscraper.ui.NavigationActivity
+import com.newsscraper.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_news_details.*
 
-class NewsDetailsFragment : Fragment() {
+class NewsDetailsFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,11 +22,14 @@ class NewsDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        startProgressDialog()
         val news: NewsDTO = arguments?.getSerializable("news") as NewsDTO
-        news.photo?.let {
-            (activity as NavigationActivity).setImage(newsImageView, it)
+        if (news.photo?.contains("http") == true) {
+            parentActivity.setImage(newsImageView, news.photo)
+        } else {
+            parentActivity.stopProgressDialog()
         }
-        dateTextView.text = "12.04.2019 14:59"
+        dateTextView.text = news.date
         authorTextView.text = news.author
         contentTextView.text = news.text
     }

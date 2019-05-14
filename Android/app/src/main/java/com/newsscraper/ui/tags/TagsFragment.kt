@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.newsscraper.R
-import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.GetTagsReceiver
 import com.newsscraper.services.apireceivers.PutTagsReceiver
-import com.newsscraper.ui.NavigationActivity
+import com.newsscraper.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_tags.*
 
-class TagsFragment : Fragment(), TagsAdapter.OnItemClickListener, GetTagsReceiver, PutTagsReceiver {
+class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsReceiver, PutTagsReceiver {
     private lateinit var newsAdapter: TagsAdapter
     private var tags: List<String> = listOf()
 
@@ -28,7 +26,8 @@ class TagsFragment : Fragment(), TagsAdapter.OnItemClickListener, GetTagsReceive
         super.onViewCreated(view, savedInstanceState)
         newsAdapter = TagsAdapter(listOf(), this)
         tagsRecyclerView.adapter = newsAdapter
-        ServiceManager.getTags(this)
+        startProgressDialog()
+        serviceManager.getTags(this)
         setAddTagButtonOnClick()
     }
 
@@ -36,14 +35,15 @@ class TagsFragment : Fragment(), TagsAdapter.OnItemClickListener, GetTagsReceive
         addTagButton.setOnClickListener {
             if (addTagEditText.text.isNotEmpty()) {
                 val tag = addTagEditText.text.toString().toLowerCase()
-                ServiceManager.putTags(this, tags + tag)
+                startProgressDialog()
+                serviceManager.putTags(this, tags + tag)
                 sentToAnalytics(tag)
             }
         }
     }
 
     private fun sentToAnalytics(tag: String) {
-        (activity as NavigationActivity).sendToAnalytics(tag, Bundle().apply { putInt("TAG", addTagEditText.id) })
+        parentActivity.sendToAnalytics(tag, Bundle().apply { putInt("TAG", addTagEditText.id) })
     }
 
     private fun populateNewsList(tagsList: List<String>) {
@@ -52,18 +52,25 @@ class TagsFragment : Fragment(), TagsAdapter.OnItemClickListener, GetTagsReceive
     }
 
     override fun onGetTagsSuccess(tags: List<String>) {
+        stopProgressDialog()
         populateNewsList(tags)
     }
 
-    override fun onGetTagsError() {}
-
-    override fun onPutTagsSuccess() {
-        ServiceManager.getTags(this)
+    override fun onGetTagsError() {
+        stopProgressDialog()
     }
 
-    override fun onPutTagsError() {}
+    override fun onPutTagsSuccess() {
+        stopProgressDialog()
+        serviceManager.getTags(this)
+    }
 
-    override fun onItemClick(tag: String, itemView: View) {
+    override fun onPutTagsError() {
+        stopProgressDialog()
+    }
 
+    override fun onItemClick(tag: String) {
+        startProgressDialog()
+        serviceManager.putTags(this, tags.filter { t -> t != tag })
     }
 }

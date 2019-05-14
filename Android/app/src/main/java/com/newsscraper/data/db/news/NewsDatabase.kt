@@ -1,4 +1,4 @@
-package com.newsscraper.data.db
+package com.newsscraper.data.db.news
 
 import android.app.Application
 import android.os.AsyncTask
@@ -20,22 +20,28 @@ abstract class NewsDatabase : RoomDatabase() {
         private var INSTANCE: NewsDatabase? = null
 
         fun getInstance(application: Application): NewsDatabase {
-            synchronized(NewsDatabase.lock) {
-                if (NewsDatabase.INSTANCE == null) {
-                    NewsDatabase.INSTANCE =
-                        Room.databaseBuilder(application, NewsDatabase::class.java, NewsDatabase.DB_NAME)
+            synchronized(lock) {
+                if (INSTANCE == null) {
+                    INSTANCE =
+                        Room.databaseBuilder(
+                            application, NewsDatabase::class.java,
+                            DB_NAME
+                        )
                             .allowMainThreadQueries()
                             .addCallback(object : RoomDatabase.Callback() {
                                 override fun onCreate(db: SupportSQLiteDatabase) {
                                     super.onCreate(db)
-                                    NewsDatabase.INSTANCE?.let {
-                                        NewsDatabase.prePopulate(it, NewsInfoProvider.newsList)
+                                    INSTANCE?.let {
+                                        prePopulate(
+                                            it,
+                                            NewsInfoProvider.newsList
+                                        )
                                     }
                                 }
                             })
                             .build()
                 }
-                return NewsDatabase.INSTANCE!!
+                return INSTANCE!!
             }
         }
 

@@ -38,19 +38,21 @@ class NewsListAdapter(private val items: List<NewsDTO>, private val clickListene
             setOnClickListener {
                 listener.onItemClick(news, it)
             }
-            if (news.photo?.isNotEmpty() == true) {
+            if (news.photo?.contains("http") == true) {
                 (context as NavigationActivity).setImage(newsImageView, news.photo, true)
+            } else {
+                newsImageView.setImageDrawable(context.getDrawable(R.drawable.ic_message))
             }
         }
 
         private fun View.setItemTextViews(news: NewsDTO) {
             titleTextView.text = news.text?.trim()
-            dateTextView.text = "11.04.2019 15:24"
+            dateTextView.text = news.date
             val sb = StringBuilder("tagi: ")
             if(news.author != null) {
                 authorTextView.text = news.author
             }
-            tagTextView.text = news.tags.joinTo(sb, ", ")
+            tagTextView.text = news.tags?.joinTo(sb, ", ")
         }
     }
 }

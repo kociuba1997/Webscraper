@@ -3,10 +3,7 @@ package com.newsscraper.services.api
 import com.newsscraper.transportobjects.NewsDTO
 import com.newsscraper.transportobjects.TagsDTO
 import com.newsscraper.transportobjects.UserDTO
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 import rx.Observable
 
 interface UserApi {
@@ -22,5 +19,4 @@ interface UserApi {
 
     @GET("user/tags")
     fun getTags(): Observable<List<String>>
-
 }

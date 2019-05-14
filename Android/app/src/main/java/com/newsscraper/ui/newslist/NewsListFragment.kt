@@ -2,17 +2,15 @@ package com.newsscraper.ui.newslist
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.newsscraper.R
-import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.GetNewsReceiver
 import com.newsscraper.transportobjects.NewsDTO
-import com.newsscraper.ui.NavigationActivity
+import com.newsscraper.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_news_list.*
 
-class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNewsReceiver {
+class NewsListFragment : BaseFragment(), NewsListAdapter.OnItemClickListener, GetNewsReceiver {
     private lateinit var viewModel: NewsListViewModel
     private lateinit var newsAdapter: NewsListAdapter
 
@@ -47,9 +45,10 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNew
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        ServiceManager.getNews(this)
+    override fun onStart() {
+        super.onStart()
+        startProgressDialog()
+        serviceManager.getNews(this)
     }
 
     private fun populateNewsList(newsList: List<NewsDTO>) {
@@ -64,8 +63,11 @@ class NewsListFragment : Fragment(), NewsListAdapter.OnItemClickListener, GetNew
     }
 
     override fun onGetNewsSuccess(news: List<NewsDTO>) {
+        stopProgressDialog()
         populateNewsList(news)
     }
 
-    override fun onGetNewsError() {}
+    override fun onGetNewsError() {
+        stopProgressDialog()
+    }
 }

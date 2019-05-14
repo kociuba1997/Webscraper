@@ -2,8 +2,8 @@ package com.newsscraper.data
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import com.newsscraper.data.db.NewsDao
-import com.newsscraper.data.db.NewsDatabase
+import com.newsscraper.data.db.news.NewsDao
+import com.newsscraper.data.db.news.NewsDatabase
 import com.newsscraper.data.model.News
 
 class NewsRepository(application: Application) {

@@ -15,41 +15,52 @@ import timber.log.Timber
 
 object ServiceManager {
 
+    private val serviceProvider = ServiceProvider()
+
+    fun setToken(token: String) {
+        serviceProvider.token = token
+    }
+
     fun getNews(receiver: GetNewsReceiver) {
-        setupRequest(ServiceProvider
-            .userService
-            .getNews(),
+        setupRequest(
+            serviceProvider
+                .userService()
+                .getNews(),
             Action1 { receiver.onGetNewsSuccess(it as List<NewsDTO>) },
             Action1 { e -> receiver.onGetNewsError() })
     }
 
     fun register(receiver: RegisterReceiver, user: UserDTO) {
-        setupRequest(ServiceProvider
-            .userRegisterService
-            .registerUser(user),
+        setupRequest(
+            serviceProvider
+                .userRegisterService()
+                .registerUser(user),
             Action1 { receiver.onRegisterSuccess() },
             Action1 { e -> receiver.onRegisterError() })
     }
 
     fun login(receiver: LoginReceiver, user: UserDTO) {
-        setupRequest(ServiceProvider
-            .loginService
-            .login(user),
+        setupRequest(
+            serviceProvider
+                .loginService()
+                .login(user),
             Action1 { receiver.onLoginSuccess(it as String) },
             Action1 { e -> receiver.onLoginError() })
     }
 
     fun getTags(receiver: GetTagsReceiver) {
-        setupRequest(ServiceProvider
-            .userService
-            .getTags(),
+        setupRequest(
+            serviceProvider
+                .userService()
+                .getTags(),
             Action1 { receiver.onGetTagsSuccess(it as List<String>) },
             Action1 { e -> receiver.onGetTagsError() })
     }
 
     fun putTags(receiver: PutTagsReceiver, tags: List<String>) {
-        setupRequest(ServiceProvider
-            .userService
+        setupRequest(
+            serviceProvider
+            .userService()
             .putTags(TagsDTO(tags)),
             Action1 { receiver.onPutTagsSuccess() },
             Action1 { e -> receiver.onPutTagsError() })

@@ -65,6 +65,7 @@ object ServiceFactory {
     internal fun <T> createRetrofitService(
         clazz: Class<T>,
         endPoint: String?,
+        token: String,
         authorizationHeader: Boolean = true
     ): T {
         if (endPoint == null) {
@@ -72,7 +73,7 @@ object ServiceFactory {
         }
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = if (authorizationHeader) createHttpClient() else createNoAuthHttpClient()
+        val client = if (authorizationHeader) createHttpClient(token) else createNoAuthHttpClient()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(endPoint)
@@ -97,13 +98,13 @@ object ServiceFactory {
             .build()
     }
 
-    private fun createHttpClient(): OkHttpClient {
+    private fun createHttpClient(token: String): OkHttpClient {
         val sslContext = SSLContext.getInstance("SSL")
         val trustAllCerts = getTrustManager()
         sslContext.init(null, trustAllCerts, java.security.SecureRandom())
         return httpClient ?: OkHttpClient.Builder()
             .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-            .addInterceptor(AddHeaderInterceptor())
+            .addInterceptor(AddHeaderInterceptor(token))
             .hostnameVerifier(getHostnameVerifier())
             .addInterceptor(createHttpLoggingInterceptor())
             .setTimeouts()
@@ -147,12 +148,12 @@ object ServiceFactory {
         return interceptor
     }
 
-    class AddHeaderInterceptor : Interceptor {
+    class AddHeaderInterceptor(val token: String) : Interceptor {
 
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
             val builder = chain.request().newBuilder()
-            builder.addHeader("Authorization", ServiceProvider.AUTHORIZATION_HEADER)
+            builder.addHeader("Authorization", token)
             return chain.proceed(builder.build())
         }
     }

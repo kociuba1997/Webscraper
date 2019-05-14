@@ -12,7 +12,7 @@ class TagsAdapter(private var items: List<String>, private val clickListener: On
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(tag: String, itemView: View)
+        fun onItemClick(tag: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -39,7 +39,7 @@ class TagsAdapter(private var items: List<String>, private val clickListener: On
         fun bind(tag: String, listener: OnItemClickListener) = with(itemView) {
             tagTextView.text = tag
             binImageView.setOnClickListener {
-                listener.onItemClick(tag, it)
+                listener.onItemClick(tag)
             }
         }
     }
