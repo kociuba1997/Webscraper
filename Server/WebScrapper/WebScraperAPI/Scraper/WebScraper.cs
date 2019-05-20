@@ -48,9 +48,6 @@ namespace WebScraperAPI.Scraper
             try
             {
                 var db = UserController.ConnectToDataBase();
-                db.DropCollection("News");
-                db.CreateCollection("News");
-                var newsCollection = db.GetCollection<News>("News");
 
                 var allTags = FetchAllTags(db);
                 List<News> newsList = new List<News>();
@@ -74,6 +71,9 @@ namespace WebScraperAPI.Scraper
                     // add redit
                 }
 
+                db.DropCollection("News");
+                db.CreateCollection("News");
+                var newsCollection = db.GetCollection<News>("News");
                 newsCollection.InsertManyAsync(newsList);
 
             }
