@@ -38,7 +38,7 @@ namespace WebScraperAPI.Scraper
             return tags;
         }
 
-        private void Scrap()
+        public void Scrap()
         {
             // make this method async
 
@@ -62,14 +62,14 @@ namespace WebScraperAPI.Scraper
                         RedditWrapper rw = new RedditWrapper();
                         var tagNews2 = rw.getNewsListAsync(tag);
 
-                        TwitterWrapper tw = new TwitterWrapper();
-                        var tagNews3 = tw.getNewsListAsync(tag);
+                        //TwitterWrapper tw = new TwitterWrapper();
+                        //var tagNews3 = tw.getNewsListAsync(tag);
 
-                        Task.WaitAll(new Task[] { tagNews, tagNews2, tagNews3 });
+                        Task.WaitAll(new Task[] { tagNews, tagNews2 });
 
                         newsList.AddRange(tagNews.Result);
                         newsList.AddRange(tagNews2.Result);
-                        newsList.AddRange(tagNews3.Result);
+                       // newsList.AddRange(tagNews3.Result);
 
                     // add redit
                 }

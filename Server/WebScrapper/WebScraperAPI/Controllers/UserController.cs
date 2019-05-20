@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using WebScraperAPI.Logic;
 using WebScraperAPI.Model;
+using WebScraperAPI.Scraper;
 
 namespace WebScraperAPI.Controllers
 {
@@ -41,7 +42,7 @@ namespace WebScraperAPI.Controllers
         // GET: api/user/news
         [Route("news")]
         [HttpGet]
-        public IActionResult GetNews()
+        public IActionResult GetNews([FromQuery] bool fetchNews)
         {
             var token = Request.Headers["Authorization"];
             try
@@ -51,6 +52,10 @@ namespace WebScraperAPI.Controllers
                 var results = usersCollection.Find(x => x.token == token).ToList();
                 if (results.Count > 0)
                 {
+                    if (fetchNews) {
+                        var scraper = new WebScraper();
+                        scraper.Scrap();
+                    }
                     var user = results.First();
                     var tags = user.tags;
                     var newsCollection = db.GetCollection<News>("News");
