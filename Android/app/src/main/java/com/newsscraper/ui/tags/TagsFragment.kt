@@ -2,9 +2,12 @@ package com.newsscraper.ui.tags
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.newsscraper.R
+import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.GetPopularTagsReceiver
 import com.newsscraper.services.apireceivers.GetTagsReceiver
 import com.newsscraper.services.apireceivers.PutTagsReceiver
@@ -32,6 +35,7 @@ class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsRec
         serviceManager.getTags(this)
         serviceManager.getPopularTags(this)
         setAddTagButtonOnClick()
+        setAddPopularTagTextViewOnClick()
     }
 
     private fun setAddTagButtonOnClick() {
@@ -40,12 +44,28 @@ class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsRec
                 val tag = addTagEditText.text.toString().toLowerCase()
                 startProgressDialog()
                 serviceManager.putTags(this, tags + tag)
-                sentToAnalytics(tag)
+                sendToAnalytics(tag)
             }
         }
     }
 
-    private fun sentToAnalytics(tag: String) {
+    private fun setAddPopularTagTextViewOnClick() {
+        setAddPopularOnTextView(popularTag1TextView)
+        setAddPopularOnTextView(popularTag2TextView)
+        setAddPopularOnTextView(popularTag3TextView)
+    }
+
+    private fun setAddPopularOnTextView(textView: TextView) {
+        textView.setOnClickListener {
+            val tag = (it as TextView).text.toString()
+            ServiceManager.putTags(this, tags + tag)
+            it.visibility = View.INVISIBLE
+            startProgressDialog()
+            sendToAnalytics(tag)
+        }
+    }
+
+    private fun sendToAnalytics(tag: String) {
         parentActivity.sendToAnalytics(tag, Bundle().apply { putInt("TAG", addTagEditText.id) })
     }
 
@@ -78,7 +98,9 @@ class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsRec
     }
 
     override fun onGetPopularTagsSuccess(popularTags: List<String>) {
-        popularTagsTextView.text = popularTags[0] + popularTags[1]
+        popularTag1TextView.text = popularTags[0]
+        popularTag2TextView.text = popularTags[1]
+        popularTag3TextView.text = popularTags[2]
     }
     override fun onGetPopularTagsError() {}
 }

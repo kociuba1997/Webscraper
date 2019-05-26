@@ -9,7 +9,6 @@ class ServiceProvider {
 
     fun userService(): UserApi = ServiceFactory.createRetrofitService(UserApi::class.java, Endpoints.BASE_URL, token)
 
-
     fun userRegisterService(): UserApi =
         ServiceFactory.createRetrofitService(UserApi::class.java, Endpoints.BASE_URL, token, false)
 
