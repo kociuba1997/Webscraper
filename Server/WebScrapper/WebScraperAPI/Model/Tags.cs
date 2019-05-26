@@ -11,6 +11,7 @@ namespace WebScraperAPI.Model
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
+        public string id;
         public string[] tags = new string[] { };
     }
 }

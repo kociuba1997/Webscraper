@@ -15,7 +15,7 @@ namespace WebScraperAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
+        IMongoDatabase db = ConnectToDataBase();
         // POST: api/user - registration
         [HttpPost]
         public IActionResult Post([FromBody] User user)
@@ -23,7 +23,6 @@ namespace WebScraperAPI.Controllers
             // add user to database
             try
             {
-                var db = ConnectToDataBase();
                 var collection = db.GetCollection<User>("Users");
                 var results = collection.Find(x => x.username == user.username).ToList();
                 if (results.Count > 0)
@@ -47,7 +46,6 @@ namespace WebScraperAPI.Controllers
             var token = Request.Headers["Authorization"];
             try
             {
-                var db = ConnectToDataBase();
                 var usersCollection = db.GetCollection<User>("Users");
                 var results = usersCollection.Find(x => x.token == token).ToList();
                 if (results.Count > 0)
@@ -85,7 +83,6 @@ namespace WebScraperAPI.Controllers
             var token = Request.Headers["Authorization"];
             try
             {
-                var db = ConnectToDataBase();
                 var usersCollection = db.GetCollection<User>("Users");
                 var results = usersCollection.Find(x => x.token == token).ToList();
                 if (results.Count > 0)
@@ -110,14 +107,17 @@ namespace WebScraperAPI.Controllers
             var token = Request.Headers["Authorization"];
             try
             {
-                var db = ConnectToDataBase();
                 var usersCollection = db.GetCollection<User>("Users");
                 var results = usersCollection.Find(x => x.token == token).ToList();
                 if (results.Count > 0)
                 {
-                    var bqManager = new BigQueryManager();
-                    var tags = bqManager.GetPopularTags().ToArray();
-                    return Ok(tags);
+                    var popularTagsCollection = db.GetCollection<Tags>("PopularTags");
+                    var tagsResults = popularTagsCollection.Find(x => true).ToList();
+                    if (tagsResults.Count > 0)
+                    {
+                        var tags = tagsResults.First();
+                        return Ok(tags.tags);
+                    }
                 }
                 return StatusCode(403);
             }
@@ -135,7 +135,6 @@ namespace WebScraperAPI.Controllers
             var token = Request.Headers["Authorization"];
             try
             {
-                var db = ConnectToDataBase();
                 var usersCollection = db.GetCollection<User>("Users");
                 var results = usersCollection.Find(x => x.token == token).ToList();
                 if (results.Count > 0)
@@ -143,6 +142,7 @@ namespace WebScraperAPI.Controllers
                     var user = results.First();
                     user.tags = tags.tags.ToArray();
                     usersCollection.ReplaceOne(x => x.token == token, user);
+                    Task.Factory.StartNew(FetchPopularTags);
                     return StatusCode(201);
                 }
                 return StatusCode(403);
@@ -151,6 +151,21 @@ namespace WebScraperAPI.Controllers
             {
                 return StatusCode(500);
             }
+        }
+
+        public static void FetchPopularTags()
+        {
+            var bqManager = new BigQueryManager();
+            var tags = bqManager.GetPopularTags().ToArray();
+            Tags t = new Tags
+            {
+                tags = tags
+            };
+            var db = ConnectToDataBase();
+            db.DropCollection("PopularTags");
+            db.CreateCollection("PopularTags");
+            var popularTagsCollection = db.GetCollection<Tags>("PopularTags");
+            popularTagsCollection.InsertOneAsync(t);
         }
 
         // DELETE: api/user/tags
