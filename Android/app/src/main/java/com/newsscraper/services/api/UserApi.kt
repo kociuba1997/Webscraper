@@ -19,4 +19,7 @@ interface UserApi {
 
     @GET("user/tags")
     fun getTags(): Observable<List<String>>
+
+    @GET("user/popularTags")
+    fun getPopularTags(): Observable<List<String>>
 }

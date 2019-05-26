@@ -28,6 +28,21 @@
             app:layout_constraintStart_toEndOf="@id/addTagEditText"
             app:layout_constraintTop_toTopOf="parent"/>
 
+    <TextView
+            android:id="@+id/popularTagsTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="3"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addTagButton" />
+
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tagsRecyclerView"
             android:layout_width="match_parent"

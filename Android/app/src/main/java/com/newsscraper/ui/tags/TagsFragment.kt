@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.newsscraper.R
+import com.newsscraper.services.apireceivers.GetPopularTagsReceiver
 import com.newsscraper.services.apireceivers.GetTagsReceiver
 import com.newsscraper.services.apireceivers.PutTagsReceiver
 import com.newsscraper.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_tags.*
 
-class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsReceiver, PutTagsReceiver {
+class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsReceiver, PutTagsReceiver,
+    GetPopularTagsReceiver {
     private lateinit var newsAdapter: TagsAdapter
     private var tags: List<String> = listOf()
 
@@ -28,6 +30,7 @@ class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsRec
         tagsRecyclerView.adapter = newsAdapter
         startProgressDialog()
         serviceManager.getTags(this)
+        serviceManager.getPopularTags(this)
         setAddTagButtonOnClick()
     }
 
@@ -73,4 +76,9 @@ class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsRec
         startProgressDialog()
         serviceManager.putTags(this, tags.filter { t -> t != tag })
     }
+
+    override fun onGetPopularTagsSuccess(popularTags: List<String>) {
+        popularTagsTextView.text = popularTags[0] + popularTags[1]
+    }
+    override fun onGetPopularTagsError() {}
 }

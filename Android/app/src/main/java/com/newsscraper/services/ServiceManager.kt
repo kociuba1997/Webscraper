@@ -66,6 +66,16 @@ object ServiceManager {
             Action1 { e -> receiver.onPutTagsError() })
     }
 
+    fun getPopularTags(receiver: GetPopularTagsReceiver) {
+        setupRequest(
+            serviceProvider
+                .userService()
+                .getPopularTags(),
+            Action1 {receiver.onGetPopularTagsSuccess(it as List<String>)},
+            Action1 {receiver.onGetPopularTagsError()}
+        )
+    }
+
     private fun setupRequest(
         observable: Observable<*>,
         onNext: Action1<Any>,

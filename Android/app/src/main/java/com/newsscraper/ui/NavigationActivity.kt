@@ -33,6 +33,7 @@ class NavigationActivity : AppCompatActivity() {
         fbAnalytics = FirebaseAnalytics.getInstance(this)
         navigationController = findNavController(R.id.navigationHostFragment)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        fbAnalytics.setAnalyticsCollectionEnabled(true)
     }
 
     override fun onSupportNavigateUp() = navigationController.navigateUp()
