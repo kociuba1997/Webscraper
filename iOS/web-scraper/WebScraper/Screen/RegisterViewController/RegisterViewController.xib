@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RegisterViewController" customModule="WebScraper" customModuleProvider="target">
+            <connections>
+                <outlet property="confirmPasswordTextField" destination="sZY-E9-OVb" id="6CF-Ld-muL"/>
+                <outlet property="passwordTextField" destination="abc-LE-Ba8" id="ZFM-hx-vPR"/>
+                <outlet property="usernameTextField" destination="teD-BM-Fbc" id="hBJ-J0-xEZ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="login" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Ue-tC-PLR" userLabel="Username Label">
+                    <rect key="frame" x="30" y="220" width="107.5" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="teD-BM-Fbc" userLabel="Username Text Field">
+                    <rect key="frame" x="157.5" y="215" width="167.5" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="abc-LE-Ba8" userLabel="Password Text Field">
+                    <rect key="frame" x="157.5" y="266" width="167.5" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sZY-E9-OVb" userLabel="Confirm Password Text Field">
+                    <rect key="frame" x="157.5" y="322" width="167.5" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hasło" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vcr-If-HPO" userLabel="Password Label">
+                    <rect key="frame" x="30" y="271" width="107.5" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="powtorz hasło" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHt-Zh-gQR" userLabel="Confirm Password Label">
+                    <rect key="frame" x="30" y="322" width="107.5" height="20.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tEw-VY-1wU" userLabel="Register Button">
+                    <rect key="frame" x="30" y="402" width="315" height="30"/>
+                    <state key="normal" title="zarejestruj się"/>
+                    <connections>
+                        <action selector="registerButtonPressed:" destination="-1" eventType="touchUpInside" id="3x7-4Q-k08"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="abc-LE-Ba8" secondAttribute="trailing" constant="50" id="0SH-sa-xMV"/>
+                <constraint firstItem="tEw-VY-1wU" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="0xn-NL-XsP"/>
+                <constraint firstItem="Vcr-If-HPO" firstAttribute="leading" secondItem="4Ue-tC-PLR" secondAttribute="leading" id="17m-8F-fqL"/>
+                <constraint firstItem="teD-BM-Fbc" firstAttribute="top" secondItem="4Ue-tC-PLR" secondAttribute="top" constant="-5" id="1vy-Q3-42o"/>
+                <constraint firstItem="4Ue-tC-PLR" firstAttribute="bottom" secondItem="Vcr-If-HPO" secondAttribute="top" constant="-30" id="3M3-Uk-lPP"/>
+                <constraint firstItem="RHt-Zh-gQR" firstAttribute="width" secondItem="Vcr-If-HPO" secondAttribute="width" id="Aez-s7-PGz"/>
+                <constraint firstItem="tEw-VY-1wU" firstAttribute="top" secondItem="sZY-E9-OVb" secondAttribute="bottom" constant="50" id="BD0-Gb-FMB"/>
+                <constraint firstItem="teD-BM-Fbc" firstAttribute="leading" secondItem="4Ue-tC-PLR" secondAttribute="trailing" constant="20" id="BiK-Lp-0f1"/>
+                <constraint firstItem="4Ue-tC-PLR" firstAttribute="width" secondItem="Vcr-If-HPO" secondAttribute="width" id="Dys-RW-GOz"/>
+                <constraint firstItem="RHt-Zh-gQR" firstAttribute="leading" secondItem="Vcr-If-HPO" secondAttribute="leading" id="H4V-Uv-hcI"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="tEw-VY-1wU" secondAttribute="trailing" constant="30" id="HMI-kH-98s"/>
+                <constraint firstItem="abc-LE-Ba8" firstAttribute="leading" secondItem="Vcr-If-HPO" secondAttribute="trailing" constant="20" id="IBX-a5-MMt"/>
+                <constraint firstItem="sZY-E9-OVb" firstAttribute="top" secondItem="RHt-Zh-gQR" secondAttribute="top" id="JeR-lH-xDx"/>
+                <constraint firstItem="sZY-E9-OVb" firstAttribute="leading" secondItem="abc-LE-Ba8" secondAttribute="leading" id="Kie-KF-dqG"/>
+                <constraint firstItem="sZY-E9-OVb" firstAttribute="width" secondItem="abc-LE-Ba8" secondAttribute="width" id="Mmb-5v-qMi"/>
+                <constraint firstItem="abc-LE-Ba8" firstAttribute="top" secondItem="Vcr-If-HPO" secondAttribute="top" constant="-5" id="Qr9-DW-zne"/>
+                <constraint firstItem="teD-BM-Fbc" firstAttribute="width" secondItem="abc-LE-Ba8" secondAttribute="width" id="TH6-Yt-Bhl"/>
+                <constraint firstItem="tEw-VY-1wU" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="trailing" constant="-345" id="Ugc-gp-NeF"/>
+                <constraint firstItem="4Ue-tC-PLR" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="200" id="sNs-t3-B3D"/>
+                <constraint firstItem="RHt-Zh-gQR" firstAttribute="top" secondItem="Vcr-If-HPO" secondAttribute="bottom" constant="30" id="tfx-0B-H2d"/>
+                <constraint firstItem="Vcr-If-HPO" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="wYL-Rf-MSV"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+        </view>
+    </objects>
+</document>

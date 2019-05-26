@@ -102,6 +102,31 @@ namespace WebScraperAPI.Controllers
             }
         }
 
+        // GET: api/user/popularTags
+        [Route("popularTags")]
+        [HttpGet]
+        public IActionResult GetPopularTags()
+        {
+            var token = Request.Headers["Authorization"];
+            try
+            {
+                var db = ConnectToDataBase();
+                var usersCollection = db.GetCollection<User>("Users");
+                var results = usersCollection.Find(x => x.token == token).ToList();
+                if (results.Count > 0)
+                {
+                    var bqManager = new BigQueryManager();
+                    var tags = bqManager.GetPopularTags().ToArray();
+                    return Ok(tags);
+                }
+                return StatusCode(403);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         // PUT: api/user/tags
         [Route("tags")]
         [HttpPut]
