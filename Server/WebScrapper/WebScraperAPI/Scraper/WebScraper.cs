@@ -17,6 +17,7 @@ namespace WebScraperAPI.Scraper
 
         public void StartScraping()
         {
+            Task.Factory.StartNew(UserController.FetchPopularTags);
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromMinutes(2);
             timer = new Timer((e) =>
