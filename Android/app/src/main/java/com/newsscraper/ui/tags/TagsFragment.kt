@@ -11,6 +11,7 @@ import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.GetPopularTagsReceiver
 import com.newsscraper.services.apireceivers.GetTagsReceiver
 import com.newsscraper.services.apireceivers.PutTagsReceiver
+import com.newsscraper.ui.NavigationActivity
 import com.newsscraper.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_tags.*
 
@@ -86,6 +87,7 @@ class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsRec
     override fun onPutTagsSuccess() {
         stopProgressDialog()
         serviceManager.getTags(this)
+        (activity as NavigationActivity).hiddenTags.clear()
     }
 
     override fun onPutTagsError() {
@@ -98,9 +100,27 @@ class TagsFragment : BaseFragment(), TagsAdapter.OnItemClickListener, GetTagsRec
     }
 
     override fun onGetPopularTagsSuccess(popularTags: List<String>) {
-        popularTag1TextView.text = popularTags[0]
-        popularTag2TextView.text = popularTags[1]
-        popularTag3TextView.text = popularTags[2]
+        val popularTagsFiltered = popularTags.filter { tag -> !tags.contains(tag) }
+
+        if(popularTagsFiltered.isNotEmpty()) {
+            popularTag1TextView.visibility = View.VISIBLE
+            popularTag1TextView.text = popularTagsFiltered[0]
+        } else {
+            popularTag1TextView.visibility = View.INVISIBLE
+        }
+        if(popularTagsFiltered.size > 1) {
+            popularTag2TextView.visibility = View.VISIBLE
+            popularTag2TextView.text = popularTagsFiltered[1]
+        } else {
+            popularTag2TextView.visibility = View.INVISIBLE
+        }
+        if(popularTagsFiltered.size > 2) {
+            popularTag3TextView.visibility = View.VISIBLE
+            popularTag3TextView.text = popularTagsFiltered[2]
+        } else {
+            popularTag3TextView.visibility = View.INVISIBLE
+        }
     }
+
     override fun onGetPopularTagsError() {}
 }

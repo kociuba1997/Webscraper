@@ -21,11 +21,11 @@ object ServiceManager {
         serviceProvider.token = token
     }
 
-    fun getNews(receiver: GetNewsReceiver) {
+    fun getNews(receiver: GetNewsReceiver, fetchNews: Boolean = false) {
         setupRequest(
             serviceProvider
                 .userService()
-                .getNews(),
+                .getNews(fetchNews),
             Action1 { receiver.onGetNewsSuccess(it as List<NewsDTO>) },
             Action1 { e -> receiver.onGetNewsError() })
     }

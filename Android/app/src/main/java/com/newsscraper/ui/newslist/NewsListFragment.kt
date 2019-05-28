@@ -1,12 +1,15 @@
 package com.newsscraper.ui.newslist
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.newsscraper.R
+import com.newsscraper.services.ServiceManager
 import com.newsscraper.services.apireceivers.GetNewsReceiver
 import com.newsscraper.transportobjects.NewsDTO
+import com.newsscraper.ui.NavigationActivity
 import com.newsscraper.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_news_list.*
 
@@ -34,6 +37,7 @@ class NewsListFragment : BaseFragment(), NewsListAdapter.OnItemClickListener, Ge
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.logout -> {
+                (activity as NavigationActivity).hiddenTags.clear()
                 view?.findNavController()?.navigate(R.id.action_newsListFragment_to_loginFragment)
                 true
             }
@@ -47,13 +51,25 @@ class NewsListFragment : BaseFragment(), NewsListAdapter.OnItemClickListener, Ge
 
     override fun onStart() {
         super.onStart()
+        newsAdapter = NewsListAdapter(this)
+        newsRecyclerView.adapter = newsAdapter
         startProgressDialog()
         serviceManager.getNews(this)
+        setupSwipeRefreshLayout()
+    }
+
+    private fun setupSwipeRefreshLayout() {
+        swipeRefreshLayout?.setOnRefreshListener { ServiceManager.getNews(this) }
+    }
+
+    private fun cancelRefreshingList() {
+        Handler().postDelayed({
+            swipeRefreshLayout?.isRefreshing = false
+        }, 1000)
     }
 
     private fun populateNewsList(newsList: List<NewsDTO>) {
-        newsAdapter = NewsListAdapter(newsList, this)
-        newsRecyclerView.adapter = newsAdapter
+        newsAdapter.setNews(newsList)
     }
 
     override fun onItemClick(news: NewsDTO, itemView: View) {
@@ -65,6 +81,7 @@ class NewsListFragment : BaseFragment(), NewsListAdapter.OnItemClickListener, Ge
     override fun onGetNewsSuccess(news: List<NewsDTO>) {
         stopProgressDialog()
         populateNewsList(news)
+        cancelRefreshingList()
     }
 
     override fun onGetNewsError() {

@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.newsscraper.R
 import com.newsscraper.services.ServiceManager
+import com.newsscraper.transportobjects.TagsDTO
 import com.newsscraper.utils.CircleTransform
 import kotlinx.android.synthetic.main.app_bar_navigation.*
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +26,8 @@ class NavigationActivity : AppCompatActivity() {
     private var progress: ProgressDialog? = null
     private lateinit var navigationController: NavController
     private lateinit var fbAnalytics: FirebaseAnalytics
+
+    var hiddenTags: MutableList<String?> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,14 +47,16 @@ class NavigationActivity : AppCompatActivity() {
 
     fun setImage(imageView: ImageView, photoLink: String, rounded: Boolean = false) {
         CoroutineScope(Dispatchers.IO).launch {
-            val url = URL(photoLink)
-            val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-            withContext(Dispatchers.Main) {
-                if (bmp != null) {
-                    if (rounded) {
-                        imageView.setImageBitmap(CircleTransform().transform(bmp))
-                    } else {
-                        imageView.setImageBitmap(bmp)
+            if (!photoLink.contains(".pl/185.")) {
+                val url = URL(photoLink)
+                val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+                withContext(Dispatchers.Main) {
+                    if (bmp != null) {
+                        if (rounded) {
+                            imageView.setImageBitmap(CircleTransform().transform(bmp))
+                        } else {
+                            imageView.setImageBitmap(bmp)
+                        }
                     }
                 }
             }

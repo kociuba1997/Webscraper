@@ -12,7 +12,9 @@ interface UserApi {
     fun registerUser(@Body user: UserDTO): Observable<Void>
 
     @GET("user/news")
-    fun getNews(): Observable<List<NewsDTO>>
+    fun getNews(
+        @Query("fetchNews") fetchNews: Boolean
+    ): Observable<List<NewsDTO>>
 
     @PUT("user/tags")
     fun putTags(@Body tags: TagsDTO): Observable<Void>
