@@ -67,7 +67,7 @@ namespace WebScrapper
             }
             return message;
 
-        }
+        }//*[@id="stream-item-tweet-1107714778510831618"]/div/div[2]/div[3]/p
 
         public string getTargetLink()
         {
@@ -85,6 +85,36 @@ namespace WebScrapper
             }
             return targetLink;
 
+        }
+
+        public void getItterator()
+        {
+            int counter = 1;
+            //List<Record> lstRecords = new List<Record>();
+            foreach (HtmlNode li in doc.DocumentNode.SelectNodes("//*[@id=\"stream-items-id\"]"))
+            {
+                HtmlNode userNode;
+                HtmlNode messageNode;
+                HtmlNode targetLinkNode;
+
+                try
+                {
+                    userNode = li.SelectSingleNode(".//div/div[2]/div[1]/a/span[1]/strong");
+                    Console.WriteLine(userNode.InnerText);
+
+                    messageNode = li.SelectSingleNode(".//div/div[2]/div[3]/p");
+                    byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
+                    message = Encoding.UTF8.GetString(bytes);
+                    Console.WriteLine(message);
+
+
+                }
+                catch
+                {
+                    Console.WriteLine("Błąd");
+                }
+                counter++;
+            }
         }
     }
 }

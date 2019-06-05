@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -55,7 +53,8 @@ namespace WebScrapper
             //Console.WriteLine(wykopWrapper.getMessage());
             //Console.WriteLine(wykopWrapper.getTargetLink());
 
-            //TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
+            TwitterWrapper twitterWrapper = new TwitterWrapper("https://twitter.com/search?q=%23gorz%C3%B3w&src=typd");
+            twitterWrapper.getItterator();
             //Console.WriteLine(twitterWrapper.getUser());
             //Console.WriteLine(twitterWrapper.getMessage());
             ////Console.WriteLine(twitterWrapper.getTargetLink());

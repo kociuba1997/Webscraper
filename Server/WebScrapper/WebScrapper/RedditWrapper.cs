@@ -86,5 +86,37 @@ namespace WebScrapper
             return targetLink;
 
         }
+
+        public void getItterator()
+        {
+            int counter = 1;
+            //List<Record> lstRecords = new List<Record>();
+            foreach (HtmlNode li in doc.DocumentNode.SelectNodes("//*[@id=\"SHORTCUT_FOCUSABLE_DIV\"]/div[2]/div/div/div/div[2]/div[3]/div[1]/div[3]/div"))
+            {
+                HtmlNode userNode;
+                HtmlNode messageNode;
+                HtmlNode targetLinkNode;
+
+                try
+                {
+                    userNode = li.SelectSingleNode(".//div[2]/div/div[2]/div[2]/div[2]/div/a");
+                    Console.WriteLine(userNode.InnerText);
+                    Console.WriteLine();
+                    messageNode = li.SelectSingleNode(".//div[2]/div/div[2]/div[1]/span/a/h2/span");
+                    byte[] bytes = Encoding.Default.GetBytes(messageNode.InnerText);
+                    message = Encoding.UTF8.GetString(bytes);
+                    Console.WriteLine(message);
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+
+                }
+                catch
+                {
+                    Console.WriteLine("Błąd");
+                }
+                counter++;
+            }
+        }
     }
 }
